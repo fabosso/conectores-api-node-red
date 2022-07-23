@@ -1,0 +1,503 @@
+[
+    {
+        "id": "85d487e8aceafc96",
+        "type": "tab",
+        "label": "COM5 comms",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5f0d43a9dc0a4da7",
+        "type": "tab",
+        "label": "MQTT comms",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4f13ca8d684be14d",
+        "type": "tab",
+        "label": "read file",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "497cf184cd8a8026",
+        "type": "serial-port",
+        "serialport": "COM5",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "82b1f593c0d9937c",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ae95c16c123ae6ac",
+        "type": "serial out",
+        "z": "85d487e8aceafc96",
+        "name": "",
+        "serial": "497cf184cd8a8026",
+        "x": 470,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "b7dfca507abe7e8c",
+        "type": "function",
+        "z": "85d487e8aceafc96",
+        "name": "ex. payload",
+        "func": "msg.payload = \"Hola Arduino!\\n\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 340,
+        "wires": [
+            [
+                "ae95c16c123ae6ac"
+            ]
+        ]
+    },
+    {
+        "id": "f920a62b231f0d72",
+        "type": "inject",
+        "z": "85d487e8aceafc96",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 340,
+        "wires": [
+            [
+                "b7dfca507abe7e8c"
+            ]
+        ]
+    },
+    {
+        "id": "6f58a3fb5a9ff766",
+        "type": "serial in",
+        "z": "85d487e8aceafc96",
+        "name": "",
+        "serial": "497cf184cd8a8026",
+        "x": 330,
+        "y": 440,
+        "wires": [
+            [
+                "fd64d88e14571105"
+            ]
+        ]
+    },
+    {
+        "id": "fd64d88e14571105",
+        "type": "debug",
+        "z": "85d487e8aceafc96",
+        "name": "input COM",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "ab6dca086050ae89",
+        "type": "mqtt in",
+        "z": "5f0d43a9dc0a4da7",
+        "name": "",
+        "topic": "",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "82b1f593c0d9937c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 350,
+        "y": 400,
+        "wires": [
+            [
+                "c3b685d88a6586e5"
+            ]
+        ]
+    },
+    {
+        "id": "c3b685d88a6586e5",
+        "type": "debug",
+        "z": "5f0d43a9dc0a4da7",
+        "name": "mqtt messages",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "a6de8aa0198fe1bf",
+        "type": "mqtt out",
+        "z": "5f0d43a9dc0a4da7",
+        "name": "",
+        "topic": "lora-ccic/",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "82b1f593c0d9937c",
+        "x": 540,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "22adcf309b25092c",
+        "type": "function",
+        "z": "5f0d43a9dc0a4da7",
+        "name": "function 1",
+        "func": "msg.payload = \"<10009>hola mundo\"\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 320,
+        "wires": [
+            [
+                "a6de8aa0198fe1bf"
+            ]
+        ]
+    },
+    {
+        "id": "91f64efa885abb14",
+        "type": "inject",
+        "z": "5f0d43a9dc0a4da7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 320,
+        "wires": [
+            [
+                "22adcf309b25092c"
+            ]
+        ]
+    },
+    {
+        "id": "708ca09a7db425b7",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "save to global object",
+        "func": "const arr = msg.payload.split(\"\\n\").filter(line => line.includes(\"=\"));\n/*const config = arr.map(item => {\n    const lineArr = item.split(\"=\");\n    const key = lineArr[0].trim();\n    const value = lineArr[1].trim();\n    return {\n        [key]: value\n    }\n})*/\n\nlet config = {};\narr.forEach(item => {\n    const lineArr = item.split(\"=\");\n    const key = lineArr[0].trim();\n    const value = lineArr[1].trim();\n    config = {\n        ...config,\n        [key]: value\n    }\n});\n\nglobal.set(\"config\", config);\n\nmsg.payload = global.get(\"config\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 200,
+        "wires": [
+            [
+                "c90f5740acea737c"
+            ]
+        ]
+    },
+    {
+        "id": "2d53f511180b9c21",
+        "type": "inject",
+        "z": "4f13ca8d684be14d",
+        "name": "flow init",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 200,
+        "wires": [
+            [
+                "b090a0b95690d0aa"
+            ]
+        ]
+    },
+    {
+        "id": "b090a0b95690d0aa",
+        "type": "file in",
+        "z": "4f13ca8d684be14d",
+        "name": "read file",
+        "filename": "C:\\Users\\Fran\\Desktop\\config.ini",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 340,
+        "y": 200,
+        "wires": [
+            [
+                "708ca09a7db425b7"
+            ]
+        ]
+    },
+    {
+        "id": "6295cfb665a849a5",
+        "type": "http request",
+        "z": "4f13ca8d684be14d",
+        "name": "http request ok",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 340,
+        "wires": [
+            [
+                "c90f5740acea737c"
+            ]
+        ]
+    },
+    {
+        "id": "ce2dd4aff1337e2a",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "bearer token",
+        "func": "const config = global.get(\"config\");\n\nmsg.url = `${config.url_token}list?user=${config.grafana_user}&pass=${config.grafana_pass}`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 300,
+        "wires": [
+            [
+                "6295cfb665a849a5"
+            ]
+        ]
+    },
+    {
+        "id": "c9c4b14db6430e5c",
+        "type": "inject",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 300,
+        "wires": [
+            [
+                "ce2dd4aff1337e2a"
+            ]
+        ]
+    },
+    {
+        "id": "c90f5740acea737c",
+        "type": "debug",
+        "z": "4f13ca8d684be14d",
+        "name": "payload",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "c8a5f62e1cdaea13",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "pokeapi ex.",
+        "func": "msg.url = \"https://pokeapi.co/api/v2/pokemon/ditto\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 380,
+        "wires": [
+            [
+                "6295cfb665a849a5"
+            ]
+        ]
+    },
+    {
+        "id": "66126125cf1413e9",
+        "type": "inject",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 380,
+        "wires": [
+            [
+                "c8a5f62e1cdaea13"
+            ]
+        ]
+    },
+    {
+        "id": "733cf0b48e275753",
+        "type": "catch",
+        "z": "4f13ca8d684be14d",
+        "name": "http request error",
+        "scope": [
+            "6295cfb665a849a5"
+        ],
+        "uncaught": false,
+        "x": 580,
+        "y": 400,
+        "wires": [
+            [
+                "4c97ebb598b2fc3d"
+            ]
+        ]
+    },
+    {
+        "id": "4c97ebb598b2fc3d",
+        "type": "debug",
+        "z": "4f13ca8d684be14d",
+        "name": "complete",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 400,
+        "wires": []
+    }
+]
