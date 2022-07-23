@@ -1,266 +1,11 @@
 [
     {
-        "id": "85d487e8aceafc96",
-        "type": "tab",
-        "label": "COM5 comms",
-        "disabled": true,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "5f0d43a9dc0a4da7",
-        "type": "tab",
-        "label": "MQTT comms",
-        "disabled": true,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "4f13ca8d684be14d",
         "type": "tab",
         "label": "read file",
         "disabled": false,
         "info": "",
         "env": []
-    },
-    {
-        "id": "497cf184cd8a8026",
-        "type": "serial-port",
-        "serialport": "COM5",
-        "serialbaud": "9600",
-        "databits": "8",
-        "parity": "none",
-        "stopbits": "1",
-        "waitfor": "",
-        "dtr": "none",
-        "rts": "none",
-        "cts": "none",
-        "dsr": "none",
-        "newline": "\\n",
-        "bin": "false",
-        "out": "char",
-        "addchar": "",
-        "responsetimeout": "10000"
-    },
-    {
-        "id": "82b1f593c0d9937c",
-        "type": "mqtt-broker",
-        "name": "",
-        "broker": "localhost",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "ae95c16c123ae6ac",
-        "type": "serial out",
-        "z": "85d487e8aceafc96",
-        "name": "",
-        "serial": "497cf184cd8a8026",
-        "x": 470,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "b7dfca507abe7e8c",
-        "type": "function",
-        "z": "85d487e8aceafc96",
-        "name": "ex. payload",
-        "func": "msg.payload = \"Hola Arduino!\\n\";\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 310,
-        "y": 340,
-        "wires": [
-            [
-                "ae95c16c123ae6ac"
-            ]
-        ]
-    },
-    {
-        "id": "f920a62b231f0d72",
-        "type": "inject",
-        "z": "85d487e8aceafc96",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "1",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 140,
-        "y": 340,
-        "wires": [
-            [
-                "b7dfca507abe7e8c"
-            ]
-        ]
-    },
-    {
-        "id": "6f58a3fb5a9ff766",
-        "type": "serial in",
-        "z": "85d487e8aceafc96",
-        "name": "",
-        "serial": "497cf184cd8a8026",
-        "x": 330,
-        "y": 440,
-        "wires": [
-            [
-                "fd64d88e14571105"
-            ]
-        ]
-    },
-    {
-        "id": "fd64d88e14571105",
-        "type": "debug",
-        "z": "85d487e8aceafc96",
-        "name": "input COM",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 490,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "ab6dca086050ae89",
-        "type": "mqtt in",
-        "z": "5f0d43a9dc0a4da7",
-        "name": "",
-        "topic": "",
-        "qos": "0",
-        "datatype": "auto-detect",
-        "broker": "82b1f593c0d9937c",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 1,
-        "x": 350,
-        "y": 400,
-        "wires": [
-            [
-                "c3b685d88a6586e5"
-            ]
-        ]
-    },
-    {
-        "id": "c3b685d88a6586e5",
-        "type": "debug",
-        "z": "5f0d43a9dc0a4da7",
-        "name": "mqtt messages",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 540,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "a6de8aa0198fe1bf",
-        "type": "mqtt out",
-        "z": "5f0d43a9dc0a4da7",
-        "name": "",
-        "topic": "lora-ccic/",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "82b1f593c0d9937c",
-        "x": 540,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "22adcf309b25092c",
-        "type": "function",
-        "z": "5f0d43a9dc0a4da7",
-        "name": "function 1",
-        "func": "msg.payload = \"<10009>hola mundo\"\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 320,
-        "wires": [
-            [
-                "a6de8aa0198fe1bf"
-            ]
-        ]
-    },
-    {
-        "id": "91f64efa885abb14",
-        "type": "inject",
-        "z": "5f0d43a9dc0a4da7",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 200,
-        "y": 320,
-        "wires": [
-            [
-                "22adcf309b25092c"
-            ]
-        ]
     },
     {
         "id": "708ca09a7db425b7",
@@ -315,7 +60,7 @@
         "type": "file in",
         "z": "4f13ca8d684be14d",
         "name": "read file",
-        "filename": "C:\\Users\\Fran\\Desktop\\config.ini",
+        "filename": "/usr/lib/node_modules/node-red/config.ini",
         "filenameType": "str",
         "format": "utf8",
         "chunk": false,
@@ -336,7 +81,7 @@
         "z": "4f13ca8d684be14d",
         "name": "http request ok",
         "method": "GET",
-        "ret": "obj",
+        "ret": "txt",
         "paytoqs": "ignore",
         "url": "",
         "tls": "",
@@ -349,7 +94,8 @@
         "y": 340,
         "wires": [
             [
-                "c90f5740acea737c"
+                "c90f5740acea737c",
+                "4c97ebb598b2fc3d"
             ]
         ]
     },
@@ -358,7 +104,7 @@
         "type": "function",
         "z": "4f13ca8d684be14d",
         "name": "bearer token",
-        "func": "const config = global.get(\"config\");\n\nmsg.url = `${config.url_token}list?user=${config.grafana_user}&pass=${config.grafana_pass}`\nreturn msg;",
+        "func": "const config = global.get(\"config\");\n\nmsg.url = `${config.url_token}generate?user=${config.grafana_user}&pass=admin&device=simulador`\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -499,5 +245,69 @@
         "x": 760,
         "y": 400,
         "wires": []
+    },
+    {
+        "id": "92c12bdca922acf4",
+        "type": "debug",
+        "z": "4f13ca8d684be14d",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "d61533a4508df3d7",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "function 2",
+        "func": "const gorillaz = {\n    NODE_TLS_REJECT_UNAUTHORIZED: \"0\"\n};\n\nglobal.set(\"env\", gorillaz);\n\nvar envi = global.get('env');\nmsg.payload = envi;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 480,
+        "wires": [
+            [
+                "92c12bdca922acf4"
+            ]
+        ]
+    },
+    {
+        "id": "8236156384836d61",
+        "type": "inject",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 400,
+        "y": 480,
+        "wires": [
+            [
+                "d61533a4508df3d7"
+            ]
+        ]
     }
 ]
