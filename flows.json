@@ -2,7 +2,7 @@
     {
         "id": "85d487e8aceafc96",
         "type": "tab",
-        "label": "COM5 comms",
+        "label": "tests - COM5 comms",
         "disabled": true,
         "info": "",
         "env": []
@@ -10,7 +10,7 @@
     {
         "id": "5f0d43a9dc0a4da7",
         "type": "tab",
-        "label": "MQTT comms",
+        "label": "test - MQTT comms",
         "disabled": true,
         "info": "",
         "env": []
@@ -20,6 +20,14 @@
         "type": "tab",
         "label": "conector API horus",
         "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3540c13fef4eaf3c",
+        "type": "tab",
+        "label": "tests - HTTP requests",
+        "disabled": true,
         "info": "",
         "env": []
     },
@@ -162,6 +170,7 @@
         "id": "ab6dca086050ae89",
         "type": "mqtt in",
         "z": "5f0d43a9dc0a4da7",
+        "d": true,
         "name": "",
         "topic": "",
         "qos": "0",
@@ -171,8 +180,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 1,
-        "x": 350,
-        "y": 400,
+        "x": 170,
+        "y": 480,
         "wires": [
             [
                 "c3b685d88a6586e5"
@@ -183,6 +192,7 @@
         "id": "c3b685d88a6586e5",
         "type": "debug",
         "z": "5f0d43a9dc0a4da7",
+        "d": true,
         "name": "mqtt messages",
         "active": true,
         "tosidebar": true,
@@ -192,8 +202,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 540,
-        "y": 400,
+        "x": 360,
+        "y": 480,
         "wires": []
     },
     {
@@ -215,29 +225,10 @@
         "wires": []
     },
     {
-        "id": "22adcf309b25092c",
-        "type": "function",
-        "z": "5f0d43a9dc0a4da7",
-        "name": "function 1",
-        "func": "msg.payload = \"<10009>hola mundo\"\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 320,
-        "wires": [
-            [
-                "a6de8aa0198fe1bf"
-            ]
-        ]
-    },
-    {
         "id": "91f64efa885abb14",
         "type": "inject",
         "z": "5f0d43a9dc0a4da7",
-        "name": "",
+        "name": "nodo interior",
         "props": [
             {
                 "p": "payload"
@@ -252,13 +243,42 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 200,
+        "payload": "<10009>voltage=225.00&temperature=24.50",
+        "payloadType": "str",
+        "x": 210,
         "y": 320,
         "wires": [
             [
-                "22adcf309b25092c"
+                "a6de8aa0198fe1bf"
+            ]
+        ]
+    },
+    {
+        "id": "6a49ce7f08f0dbca",
+        "type": "inject",
+        "z": "5f0d43a9dc0a4da7",
+        "name": "nodo exterior",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "<20009>current=0.65&raindrops=1&gas=123.51/150&lat=-34.57475&lng=58.43552&alt=15",
+        "payloadType": "str",
+        "x": 210,
+        "y": 380,
+        "wires": [
+            [
+                "a6de8aa0198fe1bf"
             ]
         ]
     },
@@ -306,7 +326,8 @@
         "y": 280,
         "wires": [
             [
-                "b090a0b95690d0aa"
+                "b090a0b95690d0aa",
+                "7ada066df377afec"
             ]
         ]
     },
@@ -315,7 +336,7 @@
         "type": "file in",
         "z": "4f13ca8d684be14d",
         "name": "read config.ini",
-        "filename": "desktop/config.ini",
+        "filename": "Desktop/config.ini",
         "filenameType": "str",
         "format": "utf8",
         "chunk": false,
@@ -383,8 +404,8 @@
             "6f825c20a5f8abf5"
         ],
         "uncaught": false,
-        "x": 160,
-        "y": 860,
+        "x": 180,
+        "y": 780,
         "wires": [
             [
                 "4c97ebb598b2fc3d"
@@ -404,8 +425,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 320,
-        "y": 860,
+        "x": 340,
+        "y": 780,
         "wires": []
     },
     {
@@ -420,7 +441,7 @@
         "finalize": "",
         "libs": [],
         "x": 860,
-        "y": 300,
+        "y": 260,
         "wires": [
             [
                 "fa0a88f356023ec6"
@@ -475,7 +496,7 @@
         "repair": false,
         "outputs": 2,
         "x": 670,
-        "y": 320,
+        "y": 340,
         "wires": [
             [
                 "d8c2671168e219f1"
@@ -501,7 +522,7 @@
         "senderr": false,
         "headers": [],
         "x": 1050,
-        "y": 300,
+        "y": 260,
         "wires": [
             [
                 "7e46875a3f07ad94"
@@ -545,148 +566,6 @@
         "wires": []
     },
     {
-        "id": "59e3ce42801f6b8d",
-        "type": "inject",
-        "z": "4f13ca8d684be14d",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "estado-servicio",
-        "payloadType": "str",
-        "x": 200,
-        "y": 400,
-        "wires": [
-            [
-                "1a14ebb7ae9ed212"
-            ]
-        ]
-    },
-    {
-        "id": "1a14ebb7ae9ed212",
-        "type": "function",
-        "z": "4f13ca8d684be14d",
-        "name": "metrics insert",
-        "func": "const config = global.get(\"config\");\nconst headers = global.get(\"headers\");\nconst endpoint = msg.payload;\nconst swaggerDataExamples = {\n    \"estado-servicio\": {\n        facilidad: \"ECR Cdo\",\n        estado: \"en servicio\"\n    },\n    \"longitud-cola\": {\n        facilidad: \"ECR Cdo\",\n        long_cola: 5,\n    },\n    \"nivel-combus\": {\n        generador: \"generador 1\",\n        nivel: 5.4,\n        capacidad: 10\n    },\n    \"alimentacion\": {\n        generador: \"generador 1\",\n        tension: 223.6,\n        corriente: 5.1\n    }\n};\n\nmsg.payload = JSON.stringify({\n    ...swaggerDataExamples[msg.payload],\n    timestamp: parseInt(new Date().getTime() / 1000)\n});\nmsg.url = config.url_metricas + endpoint;\n\nmsg.headers = headers;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 410,
-        "y": 400,
-        "wires": [
-            [
-                "6f825c20a5f8abf5"
-            ]
-        ]
-    },
-    {
-        "id": "1958109be324e66d",
-        "type": "inject",
-        "z": "4f13ca8d684be14d",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "longitud-cola",
-        "payloadType": "str",
-        "x": 190,
-        "y": 440,
-        "wires": [
-            [
-                "1a14ebb7ae9ed212"
-            ]
-        ]
-    },
-    {
-        "id": "561bc044cec631a7",
-        "type": "inject",
-        "z": "4f13ca8d684be14d",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "nivel-combus",
-        "payloadType": "str",
-        "x": 190,
-        "y": 480,
-        "wires": [
-            [
-                "1a14ebb7ae9ed212"
-            ]
-        ]
-    },
-    {
-        "id": "c9deb913baff3738",
-        "type": "inject",
-        "z": "4f13ca8d684be14d",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "alimentacion",
-        "payloadType": "str",
-        "x": 190,
-        "y": 520,
-        "wires": [
-            [
-                "1a14ebb7ae9ed212"
-            ]
-        ]
-    },
-    {
-        "id": "6f825c20a5f8abf5",
-        "type": "http request",
-        "z": "4f13ca8d684be14d",
-        "name": "post http ok",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 610,
-        "y": 400,
-        "wires": [
-            [
-                "a1daa3ac156f9010"
-            ]
-        ]
-    },
-    {
         "id": "fcc2c15bb1b7c795",
         "type": "debug",
         "z": "4f13ca8d684be14d",
@@ -704,9 +583,485 @@
         "wires": []
     },
     {
-        "id": "a1daa3ac156f9010",
+        "id": "7d86019b8274d46b",
+        "type": "mqtt in",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "topic": "lora-ccic/",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "82b1f593c0d9937c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 540,
+        "y": 580,
+        "wires": [
+            [
+                "25e68572504e173b",
+                "b76708477da203e2"
+            ]
+        ]
+    },
+    {
+        "id": "25e68572504e173b",
         "type": "debug",
         "z": "4f13ca8d684be14d",
+        "name": "mqtt messages",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "7ada066df377afec",
+        "type": "file in",
+        "z": "4f13ca8d684be14d",
+        "name": "read facilities.json",
+        "filename": "Desktop/facilities.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 370,
+        "y": 220,
+        "wires": [
+            [
+                "81b82240936719f2"
+            ]
+        ]
+    },
+    {
+        "id": "81b82240936719f2",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "save",
+        "func": "const facilities = JSON.parse(msg.payload);\nglobal.set(\"facilities\", facilities);\n\nmsg.payload = global.get(\"facilities\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 220,
+        "wires": [
+            [
+                "fcc2c15bb1b7c795"
+            ]
+        ]
+    },
+    {
+        "id": "b76708477da203e2",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "facility search",
+        "func": "let idFacility = parseInt(msg.payload.substring(\n    msg.payload.indexOf(\"<\") + 1,\n    msg.payload.lastIndexOf(\">\")\n));\n\nidFacility = idFacility < 20000 ? idFacility : idFacility - 10000;\n\nconst facilities = global.get(\"facilities\");\nif (typeof facilities[idFacility] === \"undefined\") {\n    throw new Error(`no existe esta facility: ${idFacility}`);\n}\n\nconst loraPayload = msg.payload.substring(msg.payload.indexOf(\">\") + 1);\nlet loraData = {};\nconst validLoraDataEntries = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\"];\n// ToDo: añadir mensajes militares\nloraPayload.split(\"&\").forEach(str => {\n    const arr = str.split(\"=\");\n    if (!validLoraDataEntries.includes(arr[0])) {\n        throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n    }\n    loraData = {\n        ...loraData,\n        [arr[0]]: arr[1]\n    };\n});\n\n\n\n\nlet mqttBuffer = global.get(\"mqttBuffer\") ? global.get(\"mqttBuffer\") : {} ;\nif (!mqttBuffer[idFacility]) {\n    mqttBuffer = {\n        ...mqttBuffer,\n        [idFacility]: {\n            metadata: facilities[idFacility]\n        }\n    };\n}\n\nmqttBuffer[idFacility].loraData = {\n    ...mqttBuffer[idFacility].loraData,\n    ...loraData\n};\n\nglobal.set(\"mqttBuffer\", mqttBuffer);\nmsg.payload = mqttBuffer[idFacility];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 580,
+        "wires": [
+            [
+                "6f082191959bd86b"
+            ]
+        ]
+    },
+    {
+        "id": "ecee1a956ea6b9d9",
+        "type": "mqtt out",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "topic": "lora-ccic/",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "82b1f593c0d9937c",
+        "x": 400,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "4eae255b059dd109",
+        "type": "inject",
+        "z": "4f13ca8d684be14d",
+        "name": "nodo interior",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "<10009>voltage=225.00&temperature=24.50",
+        "payloadType": "str",
+        "x": 210,
+        "y": 580,
+        "wires": [
+            [
+                "ecee1a956ea6b9d9"
+            ]
+        ]
+    },
+    {
+        "id": "e975a788cb0bc65a",
+        "type": "inject",
+        "z": "4f13ca8d684be14d",
+        "name": "nodo exterior",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "<20009>current=0.65&raindrops=1&gas=123.51/150&lat=-34.57475&lng=58.43552&alt=15",
+        "payloadType": "str",
+        "x": 210,
+        "y": 640,
+        "wires": [
+            [
+                "ecee1a956ea6b9d9"
+            ]
+        ]
+    },
+    {
+        "id": "6f082191959bd86b",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "LoRa parser",
+        "func": "const requests = [];\n\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\n\nconst nivel = parseFloat(msg.payload.loraData.gas.split(\"/\")[0]);\nconst capacidad = parseFloat(msg.payload.loraData.gas.split(\"/\")[1]);\nrequests.push({\n    endpoint: \"nivel-combus\",\n    type: \"metrica\",\n    body: {\n        generador,\n        nivel,\n        capacidad,\n        timestamp\n    }\n});\n\nrequests.push({\n    endpoint: \"alimentacion\",\n    type: \"metrica\",\n    body: {\n        generador,\n        tension: parseFloat(msg.payload.loraData.voltage),\n        corriente: parseFloat(msg.payload.loraData.current),\n        timestamp\n    }\n});\n\n// todo endpoint GPS\n/* requests.push({\n    endpoint: \"geolocalization\",\n    type: \"metrica\",\n    body: {\n        facilidad,\n        latitude: parseFloat(msg.payload.loraData.lat),\n        longitude: parseFloat(msg.payload.loraData.lng),\n        altitude: parseFloat(msg.payload.loraData.alt),\n        timestamp,\n    }\n})*/\n\nrequests.push({\n    endpoint: \"sensor_bool\",\n    type: \"evento\",\n    body: {\n        facilidad,\n        evento: \"rain\",\n        valor: msg.payload.loraData.raindrops === \"1\",\n        timestamp\n    }\n});\n\n\n// deprecated\n/* requests.push({\n    endpoint: \"sensor_bool\",\n    type: \"evento\",\n    body: {\n        facilidad,\n        evento: \"presence\",\n        valor: msg.payload.loraData.presence === \"1\",\n        timestamp\n    }\n}); */ \n\n// ToDo - parsear data de los mensajes militares\n/* requests.push({\n    endpoint: \"mens-mil\",\n    type: \"evento\",\n    body: {\n        nro_mm: 2,\n        clasificacion: \"reservado\",\n        precedencia: \"rutina\",\n        cifrado: true,\n        destino: \"Puesto Comando\",\n        origen: \"Centro de Mensajes\",\n        evento: \"entregar\",\n        timestamp\n    }\n})\n*/\n\n\nmsg.payload = requests;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 580,
+        "wires": [
+            [
+                "d567249ea6dd76a2",
+                "cb8b6a3cb85a66f6"
+            ]
+        ]
+    },
+    {
+        "id": "a7113242f1709d9a",
+        "type": "inject",
+        "z": "4f13ca8d684be14d",
+        "name": "reset",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 160,
+        "wires": [
+            [
+                "643160fec696ea2b"
+            ]
+        ]
+    },
+    {
+        "id": "643160fec696ea2b",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "mqttBuffer",
+        "func": "\nglobal.set(\"mqttBuffer\", {});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d567249ea6dd76a2",
+        "type": "split",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 1110,
+        "y": 580,
+        "wires": [
+            [
+                "665beff27c70bc7d"
+            ]
+        ]
+    },
+    {
+        "id": "665beff27c70bc7d",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "insert",
+        "func": "\nconst config = global.get(\"config\");\nconst headers = global.get(\"headers\");\nconst baseUrl = msg.payload.type === \"metrica\" ? config.url_metricas : config.url_eventos;\n\nmsg = {\n    payload: JSON.stringify(msg.payload.body),\n    url: baseUrl + msg.payload.endpoint,\n    headers\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1250,
+        "y": 580,
+        "wires": [
+            [
+                "baf9389b5bf4a787"
+            ]
+        ]
+    },
+    {
+        "id": "baf9389b5bf4a787",
+        "type": "http request",
+        "z": "4f13ca8d684be14d",
+        "name": "post http ok",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1410,
+        "y": 580,
+        "wires": [
+            [
+                "22164fe6f7d1a4c6"
+            ]
+        ]
+    },
+    {
+        "id": "22164fe6f7d1a4c6",
+        "type": "debug",
+        "z": "4f13ca8d684be14d",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1570,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "cb8b6a3cb85a66f6",
+        "type": "debug",
+        "z": "4f13ca8d684be14d",
+        "name": "requests",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "59e3ce42801f6b8d",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "estado-servicio",
+        "payloadType": "str",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "1a14ebb7ae9ed212"
+            ]
+        ]
+    },
+    {
+        "id": "1a14ebb7ae9ed212",
+        "type": "function",
+        "z": "3540c13fef4eaf3c",
+        "name": "metrics insert",
+        "func": "const config = global.get(\"config\");\nconst headers = global.get(\"headers\");\nconst endpoint = msg.payload;\nconst swaggerDataExamples = {\n    \"estado-servicio\": {\n        facilidad: \"ECR Cdo\",\n        estado: \"en servicio\"\n    },\n    \"longitud-cola\": {\n        facilidad: \"ECR Cdo\",\n        long_cola: 5,\n    },\n    \"nivel-combus\": {\n        generador: \"generador 1\",\n        nivel: 5.4,\n        capacidad: 10\n    },\n    \"alimentacion\": {\n        generador: \"generador 1\",\n        tension: 223.6,\n        corriente: 10.0\n    }\n};\n\nmsg.payload = JSON.stringify({\n    ...swaggerDataExamples[msg.payload],\n    timestamp: parseInt(new Date().getTime() / 1000)\n});\nmsg.url = config.url_metricas + endpoint;\n\nmsg.headers = headers;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "970a76e286d4227c"
+            ]
+        ]
+    },
+    {
+        "id": "1958109be324e66d",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "longitud-cola",
+        "payloadType": "str",
+        "x": 150,
+        "y": 160,
+        "wires": [
+            [
+                "1a14ebb7ae9ed212"
+            ]
+        ]
+    },
+    {
+        "id": "561bc044cec631a7",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "nivel-combus",
+        "payloadType": "str",
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "1a14ebb7ae9ed212"
+            ]
+        ]
+    },
+    {
+        "id": "c9deb913baff3738",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "alimentacion",
+        "payloadType": "str",
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "1a14ebb7ae9ed212"
+            ]
+        ]
+    },
+    {
+        "id": "6f825c20a5f8abf5",
+        "type": "http request",
+        "z": "3540c13fef4eaf3c",
+        "name": "post http ok",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 570,
+        "y": 120,
+        "wires": [
+            [
+                "a1daa3ac156f9010"
+            ]
+        ]
+    },
+    {
+        "id": "a1daa3ac156f9010",
+        "type": "debug",
+        "z": "3540c13fef4eaf3c",
         "name": "payload",
         "active": true,
         "tosidebar": true,
@@ -716,33 +1071,33 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 780,
-        "y": 400,
+        "x": 840,
+        "y": 120,
         "wires": []
     },
     {
         "id": "7bba23b06978044a",
         "type": "function",
-        "z": "4f13ca8d684be14d",
+        "z": "3540c13fef4eaf3c",
         "name": "events insert",
-        "func": "const config = global.get(\"config\");\nconst headers = global.get(\"headers\");\nconst endpoint = msg.payload === \"mens-mil\" ? \"mens-mil\" : \"sensor_bool\";\nconst swaggerDataExamples = {\n    \"mens-mil\": {\n        nro_mm: 1,\n        clasificacion: \"reservado\",\n        precedencia: \"rutina\",\n        cifrado: true,\n        destino: \"Puesto Comando\",\n        origen: \"Centro de Mensajes\",\n        evento: \"entregar\",\n    },\n    \"rain-sensor\": {\n        facilidad: \"generador 1\",\n        evento: \"rain\",\n        valor: false\n    },\n    \"presence-sensor\" : {\n        facilidad: \"generador 1\",\n        evento: \"presence\",\n        valor: true\n    }\n};\n\nmsg.payload = JSON.stringify({\n    ...swaggerDataExamples[msg.payload],\n    timestamp: parseInt(new Date().getTime() / 1000)\n});\nmsg.url = config.url_eventos + endpoint;\n\nmsg.headers = headers;\nreturn msg;",
+        "func": "const config = global.get(\"config\");\nconst headers = global.get(\"headers\");\nconst endpoint = msg.payload === \"mens-mil\" ? \"mens-mil\" : \"sensor_bool\";\nconst swaggerDataExamples = {\n    \"mens-mil\": {\n        nro_mm: 2,\n        clasificacion: \"reservado\",\n        precedencia: \"rutina\",\n        cifrado: true,\n        destino: \"Puesto Comando\",\n        origen: \"Centro de Mensajes\",\n        evento: \"entregar\",\n    },\n    \"rain-sensor\": {\n        facilidad: \"generador 1\",\n        evento: \"rain\",\n        valor: true\n    },\n    \"presence-sensor\" : {\n        facilidad: \"generador 1\",\n        evento: \"presence\",\n        valor: true\n    }\n};\n\nmsg.payload = JSON.stringify({\n    ...swaggerDataExamples[msg.payload],\n    timestamp: parseInt(new Date().getTime() / 1000)\n});\nmsg.url = config.url_eventos + endpoint;\n\nmsg.headers = headers;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 430,
-        "y": 580,
+        "x": 370,
+        "y": 300,
         "wires": [
             [
-                "6f825c20a5f8abf5"
+                "970a76e286d4227c"
             ]
         ]
     },
     {
         "id": "ad83ac8858114762",
         "type": "inject",
-        "z": "4f13ca8d684be14d",
+        "z": "3540c13fef4eaf3c",
         "name": "",
         "props": [
             {
@@ -756,8 +1111,8 @@
         "topic": "",
         "payload": "mens-mil",
         "payloadType": "str",
-        "x": 180,
-        "y": 580,
+        "x": 140,
+        "y": 300,
         "wires": [
             [
                 "7bba23b06978044a"
@@ -767,7 +1122,7 @@
     {
         "id": "4c48b7f4287b12e9",
         "type": "inject",
-        "z": "4f13ca8d684be14d",
+        "z": "3540c13fef4eaf3c",
         "name": "",
         "props": [
             {
@@ -781,8 +1136,8 @@
         "topic": "",
         "payload": "rain-sensor",
         "payloadType": "str",
-        "x": 180,
-        "y": 660,
+        "x": 140,
+        "y": 380,
         "wires": [
             [
                 "7bba23b06978044a"
@@ -792,7 +1147,7 @@
     {
         "id": "578b66f2c692bbd3",
         "type": "inject",
-        "z": "4f13ca8d684be14d",
+        "z": "3540c13fef4eaf3c",
         "name": "",
         "props": [
             {
@@ -806,12 +1161,29 @@
         "topic": "",
         "payload": "presence-sensor",
         "payloadType": "str",
-        "x": 200,
-        "y": 700,
+        "x": 160,
+        "y": 420,
         "wires": [
             [
                 "7bba23b06978044a"
             ]
         ]
+    },
+    {
+        "id": "970a76e286d4227c",
+        "type": "debug",
+        "z": "3540c13fef4eaf3c",
+        "name": "payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 300,
+        "wires": []
     }
 ]
