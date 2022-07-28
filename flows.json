@@ -32,6 +32,14 @@
         "env": []
     },
     {
+        "id": "2691da417deca3df",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "497cf184cd8a8026",
         "type": "serial-port",
         "serialport": "COM5",
@@ -595,7 +603,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 540,
+        "x": 660,
         "y": 580,
         "wires": [
             [
@@ -617,7 +625,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 740,
+        "x": 860,
         "y": 640,
         "wires": []
     },
@@ -664,14 +672,15 @@
         "id": "b76708477da203e2",
         "type": "function",
         "z": "4f13ca8d684be14d",
+        "d": true,
         "name": "facility search",
-        "func": "let idFacility = parseInt(msg.payload.substring(\n    msg.payload.indexOf(\"<\") + 1,\n    msg.payload.lastIndexOf(\">\")\n));\n\nidFacility = idFacility < 20000 ? idFacility : idFacility - 10000;\n\nconst facilities = global.get(\"facilities\");\nif (typeof facilities[idFacility] === \"undefined\") {\n    throw new Error(`no existe esta facility: ${idFacility}`);\n}\n\nconst loraPayload = msg.payload.substring(msg.payload.indexOf(\">\") + 1);\nlet loraData = {};\nconst validLoraDataEntries = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\"];\n// ToDo: añadir mensajes militares\nloraPayload.split(\"&\").forEach(str => {\n    const arr = str.split(\"=\");\n    if (!validLoraDataEntries.includes(arr[0])) {\n        throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n    }\n    loraData = {\n        ...loraData,\n        [arr[0]]: arr[1]\n    };\n});\n\n\n\n\nlet mqttBuffer = global.get(\"mqttBuffer\") ? global.get(\"mqttBuffer\") : {} ;\nif (!mqttBuffer[idFacility]) {\n    mqttBuffer = {\n        ...mqttBuffer,\n        [idFacility]: {\n            metadata: facilities[idFacility]\n        }\n    };\n}\n\nmqttBuffer[idFacility].loraData = {\n    ...mqttBuffer[idFacility].loraData,\n    ...loraData\n};\n\nglobal.set(\"mqttBuffer\", mqttBuffer);\nmsg.payload = mqttBuffer[idFacility];\nreturn msg;",
+        "func": "let idFacility = parseInt(msg.payload.substring(\n    msg.payload.indexOf(\"<\") + 1,\n    msg.payload.lastIndexOf(\">\")\n));\n\nidFacility = idFacility < 20000 ? idFacility : idFacility - 10000;\n\nconst facilities = global.get(\"facilities\") || {};\nif (!facilities[idFacility]) {\n    throw new Error(`no existe esta facility: ${idFacility}`);\n}\n\nconst loraPayload = msg.payload.substring(msg.payload.indexOf(\">\") + 1);\nlet loraData = {};\nconst validLoraDataEntries = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\"];\n// ToDo: añadir mensajes militares\nloraPayload.split(\"&\").forEach(str => {\n    const arr = str.split(\"=\");\n    if (!validLoraDataEntries.includes(arr[0])) {\n        throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n    }\n    loraData = {\n        ...loraData,\n        [arr[0]]: arr[1]\n    };\n});\n\n\nlet mqttBuffer = global.get(\"mqttBuffer\") || {} ;\nif (!mqttBuffer[idFacility]) {\n    mqttBuffer = {\n        ...mqttBuffer,\n        [idFacility]: {\n            metadata: facilities[idFacility]\n        }\n    };\n}\n\nmqttBuffer[idFacility].loraData = {\n    ...mqttBuffer[idFacility].loraData,\n    ...loraData\n};\n\nglobal.set(\"mqttBuffer\", mqttBuffer);\nmsg.payload = mqttBuffer[idFacility];\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 740,
+        "x": 860,
         "y": 580,
         "wires": [
             [
@@ -693,7 +702,7 @@
         "correl": "",
         "expiry": "",
         "broker": "82b1f593c0d9937c",
-        "x": 400,
+        "x": 520,
         "y": 580,
         "wires": []
     },
@@ -705,10 +714,6 @@
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
         "repeat": "",
@@ -716,13 +721,13 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "<10009>voltage=225.00&temperature=24.50",
+        "payload": "nodo interior",
         "payloadType": "str",
-        "x": 210,
+        "x": 130,
         "y": 580,
         "wires": [
             [
-                "ecee1a956ea6b9d9"
+                "611edfbf7959d5a2"
             ]
         ]
     },
@@ -734,10 +739,6 @@
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
         "repeat": "",
@@ -745,33 +746,13 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "<20009>current=0.65&raindrops=1&gas=123.51/150&lat=-34.57475&lng=58.43552&alt=15",
+        "payload": "nodo exterior",
         "payloadType": "str",
-        "x": 210,
+        "x": 130,
         "y": 640,
         "wires": [
             [
-                "ecee1a956ea6b9d9"
-            ]
-        ]
-    },
-    {
-        "id": "6f082191959bd86b",
-        "type": "function",
-        "z": "4f13ca8d684be14d",
-        "name": "LoRa parser",
-        "func": "const requests = [];\n\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\n\nconst nivel = parseFloat(msg.payload.loraData.gas.split(\"/\")[0]);\nconst capacidad = parseFloat(msg.payload.loraData.gas.split(\"/\")[1]);\nrequests.push({\n    endpoint: \"nivel-combus\",\n    type: \"metrica\",\n    body: {\n        generador,\n        nivel,\n        capacidad,\n        timestamp\n    }\n});\n\nrequests.push({\n    endpoint: \"alimentacion\",\n    type: \"metrica\",\n    body: {\n        generador,\n        tension: parseFloat(msg.payload.loraData.voltage),\n        corriente: parseFloat(msg.payload.loraData.current),\n        timestamp\n    }\n});\n\n// todo endpoint GPS\n/* requests.push({\n    endpoint: \"geolocalization\",\n    type: \"metrica\",\n    body: {\n        facilidad,\n        latitude: parseFloat(msg.payload.loraData.lat),\n        longitude: parseFloat(msg.payload.loraData.lng),\n        altitude: parseFloat(msg.payload.loraData.alt),\n        timestamp,\n    }\n})*/\n\nrequests.push({\n    endpoint: \"sensor_bool\",\n    type: \"evento\",\n    body: {\n        facilidad,\n        evento: \"rain\",\n        valor: msg.payload.loraData.raindrops === \"1\",\n        timestamp\n    }\n});\n\n\n// deprecated\n/* requests.push({\n    endpoint: \"sensor_bool\",\n    type: \"evento\",\n    body: {\n        facilidad,\n        evento: \"presence\",\n        valor: msg.payload.loraData.presence === \"1\",\n        timestamp\n    }\n}); */ \n\n// ToDo - parsear data de los mensajes militares\n/* requests.push({\n    endpoint: \"mens-mil\",\n    type: \"evento\",\n    body: {\n        nro_mm: 2,\n        clasificacion: \"reservado\",\n        precedencia: \"rutina\",\n        cifrado: true,\n        destino: \"Puesto Comando\",\n        origen: \"Centro de Mensajes\",\n        evento: \"entregar\",\n        timestamp\n    }\n})\n*/\n\n\nmsg.payload = requests;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 950,
-        "y": 580,
-        "wires": [
-            [
-                "d567249ea6dd76a2",
-                "cb8b6a3cb85a66f6"
+                "611edfbf7959d5a2"
             ]
         ]
     },
@@ -832,7 +813,7 @@
         "arraySpltType": "len",
         "stream": false,
         "addname": "",
-        "x": 1110,
+        "x": 1210,
         "y": 580,
         "wires": [
             [
@@ -851,7 +832,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1250,
+        "x": 1350,
         "y": 580,
         "wires": [
             [
@@ -874,7 +855,7 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 1410,
+        "x": 1490,
         "y": 580,
         "wires": [
             [
@@ -895,7 +876,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1570,
+        "x": 1630,
         "y": 580,
         "wires": []
     },
@@ -912,9 +893,73 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1100,
+        "x": 1220,
         "y": 640,
         "wires": []
+    },
+    {
+        "id": "611edfbf7959d5a2",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "randomize payload",
+        "func": "function Utf8ArrayToStr(array) {\n    var out, i, len, c;\n    var char2, char3;\n\n    out = \"\";\n    len = array.length;\n    i = 0;\n    while (i < len) {\n        c = array[i++];\n        switch (c >> 4) {\n            case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:\n                // 0xxxxxxx\n                out += String.fromCharCode(c);\n                break;\n            case 12: case 13:\n                // 110x xxxx   10xx xxxx\n                char2 = array[i++];\n                out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));\n                break;\n            case 14:\n                // 1110 xxxx  10xx xxxx  10xx xxxx\n                char2 = array[i++];\n                char3 = array[i++];\n                out += String.fromCharCode(((c & 0x0F) << 12) |\n                    ((char2 & 0x3F) << 6) |\n                    ((char3 & 0x3F) << 0));\n                break;\n        }\n    }\n\n    return out;\n}\n\nconst loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5;\nconst nroMM = () => {\n    const nro = global.get(\"nroMM\") || 1;\n    global.set(\"nroMM\", nro + 1);\n    return nro;\n}\nconst trunc = (str) => parseFloat(parseFloat(str).toFixed(0))\n\nconst generarPayloadInt = () => `<${loraId}>voltage=${rng(210, 230)}&temperature=${rng(5, 30)}`;\nconst generarPayloadExt = () => `<${10000 + loraId}>current=${rng(0.5, 10)}&raindrops=${rngB()}&gas=${rng(0, fuelLimit)}/${fuelLimit}&lat=-34.57475&lng=58.43552&alt=15`;\n\n/* \n    nro_mm: 2,\n    clasificacion: \"reservado\",\n    precedencia: \"rutina\",\n    cifrado: true,\n    destino: \"Puesto Comando\",\n    origen: \"Centro de Mensajes\",\n    evento: \"entregar\",\n*/\nconst generarMM = () => {\n    const clasificacion = trunc(rng(1, 4));             // 1: publico, 2: reservado, 3: confidencial, 4: secreto\n    const numeroMsj = nroMM();                              \n    const precedencia = trunc(rng(1, 4));               // 1: rutina, 2: prioridad, 3: inmediato, 4: flash\n    const cifrado = clasificacion >= 3 ? + rngB() : 0;      \n    const indexOrigen = trunc(rng(1, 5));               // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const indexDestino = indexOrigen % 5 + 1;               // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const evento = trunc(rng(1, 4));                    // 1: generado, 2: recibido_estafeta, 3: entregado_estafeta, 4: transmitido \n\n    const nro = numeroMsj % 65536;\n    let dataByte = [];\n    dataByte[0] += (clasificacion - 1) * 2^0;    // bits 0 y 1\n    dataByte[0] += (precedencia - 1) * 2^2;      // bits 2 y 3\n    dataByte[0] += cifrado * 2^4;                // bit 4\n    dataByte[1] += (indexOrigen - 1) * 2^5;      // bits 5, 6 y 7\n    dataByte[1] += (indexDestino - 1) * 2^0;     // bits 0, 1 y 2\n    dataByte[1] += (evento - 1) * 2^3;           // bits 3 y 4\n\n    \n    const arr1 = new Uint8Array(3);\n    arr1[0] = 0;\n    arr1[1] = numeroMsj % 256;\n    arr1[2] = (numeroMsj - numeroMsj % 256) / 256;\n    const arr2 = new Uint8Array(3);\n    arr2[0] = 0;\n    arr2[1] = dataByte[0];\n    arr2[2] = dataByte[1];\n    return `<${loraId}>nro=123&data=456`;\n    //return `<${loraId}>nro=${Utf8ArrayToStr(arr1)}&data=${Utf8ArrayToStr(arr2)}`;\n}\n\nif (msg.payload === \"nodo interior\") {\n    msg.payload = generarPayloadInt();\n} else if (msg.payload === \"nodo exterior\") {\n    msg.payload = generarPayloadExt();\n} else if (msg.payload === \"mensaje militar\") {\n    msg.payload = generarMM();\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 580,
+        "wires": [
+            [
+                "ecee1a956ea6b9d9"
+            ]
+        ]
+    },
+    {
+        "id": "9daf482aa2597b1e",
+        "type": "inject",
+        "z": "4f13ca8d684be14d",
+        "name": "mensaje militar",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "mensaje militar",
+        "payloadType": "str",
+        "x": 140,
+        "y": 700,
+        "wires": [
+            [
+                "611edfbf7959d5a2"
+            ]
+        ]
+    },
+    {
+        "id": "6f082191959bd86b",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "LoRa parser",
+        "func": "const requests = [];\n\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\n\nconst nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\nconst capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\nrequests.push({\n    endpoint: \"nivel-combus\",\n    type: \"metrica\",\n    body: {\n        generador,\n        nivel,\n        capacidad,\n        timestamp\n    }\n});\n\nrequests.push({\n    endpoint: \"alimentacion\",\n    type: \"metrica\",\n    body: {\n        generador,\n        tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n        corriente: parseFloat(msg.payload.loraData.current) || 1.0,\n        timestamp\n    }\n});\n\n// todo endpoint GPS\n/* requests.push({\n    endpoint: \"geolocalization\",\n    type: \"metrica\",\n    body: {\n        facilidad,\n        latitude: parseFloat(msg.payload.loraData.lat) || 0,\n        longitude: parseFloat(msg.payload.loraData.lng) || 0,\n        altitude: parseFloat(msg.payload.loraData.alt) || 0,\n        timestamp,\n    }\n})*/\n\nrequests.push({\n    endpoint: \"sensor_bool\",\n    type: \"evento\",\n    body: {\n        facilidad,\n        evento: \"rain\",\n        valor: msg.payload.loraData.raindrops === \"1\",\n        timestamp\n    }\n});\n\n\n// deprecated\n/* requests.push({\n    endpoint: \"sensor_bool\",\n    type: \"evento\",\n    body: {\n        facilidad,\n        evento: \"presence\",\n        valor: msg.payload.loraData.presence === \"1\",\n        timestamp\n    }\n}); */ \n\n// ToDo - parsear data de los mensajes militares\n/* requests.push({\n    endpoint: \"mens-mil\",\n    type: \"evento\",\n    body: {\n        nro_mm: 2,\n        clasificacion: \"reservado\",\n        precedencia: \"rutina\",\n        cifrado: true,\n        destino: \"Puesto Comando\",\n        origen: \"Centro de Mensajes\",\n        evento: \"entregar\",\n        timestamp\n    }\n})\n*/\n\n\nmsg.payload = requests;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1050,
+        "y": 580,
+        "wires": [
+            [
+                "d567249ea6dd76a2",
+                "cb8b6a3cb85a66f6"
+            ]
+        ]
     },
     {
         "id": "59e3ce42801f6b8d",
