@@ -32,6 +32,14 @@
         "env": []
     },
     {
+        "id": "e47eef669dc31ecb",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "5842f7d28b260c86",
         "type": "subflow",
         "name": "Initialize",
@@ -81,7 +89,7 @@
     {
         "id": "1e494c71e42901f0",
         "type": "subflow",
-        "name": "token generator",
+        "name": "Token generator",
         "info": "",
         "category": "",
         "in": [
@@ -107,28 +115,6 @@
                 ]
             }
         ],
-        "env": [],
-        "meta": {},
-        "color": "#DDAA99"
-    },
-    {
-        "id": "97d5db5f6dd251ee",
-        "type": "subflow",
-        "name": "randomize MQTT payload",
-        "info": "",
-        "category": "",
-        "in": [
-            {
-                "x": 20,
-                "y": 80,
-                "wires": [
-                    {
-                        "id": "611edfbf7959d5a2"
-                    }
-                ]
-            }
-        ],
-        "out": [],
         "env": [],
         "meta": {},
         "color": "#DDAA99"
@@ -291,7 +277,7 @@
         "type": "function",
         "z": "5842f7d28b260c86",
         "name": "save other constants",
-        "func": "const validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\"]\nconst diccionario = {\n    clasificaciones: {\n        1: \"publico\",\n        2: \"reservado\",\n        3: \"confidencial\",\n        4: \"secreto\"\n    },\n    precedencias: {\n        1: \"rutina\",\n        2: \"prioridad\",\n        3: \"inmediato\",\n        4: \"flash\"\n    },\n    redes: {\n        1: \"Red Cdo Op\",\n        2: \"Red Mat Pers\",\n        3: \"Red Icia\",\n        4: \"Red Cdo\",\n        5: \"Red Op\"\n    },\n    eventos: {\n        1: \"generado\",\n        2: \"recibido_estafeta\",\n        3: \"entregado_estafeta\",\n        4: \"transmitido\"\n    }\n}\n\n\nglobal.set(\"validLoraKeys\", validLoraKeys);\nglobal.set(\"diccionario\", diccionario);\n\nmsg.payload = {\n    validLoraKeys,\n    diccionario\n}\n\nreturn msg;",
+        "func": "const validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"emergency\"]\nconst diccionario = {\n    clasificaciones: {\n        1: \"publico\",\n        2: \"reservado\",\n        3: \"confidencial\",\n        4: \"secreto\"\n    },\n    precedencias: {\n        1: \"rutina\",\n        2: \"prioridad\",\n        3: \"inmediato\",\n        4: \"flash\"\n    },\n    redes: {\n        1: \"Red Cdo Op\",\n        2: \"Red Mat Pers\",\n        3: \"Red Icia\",\n        4: \"Red Cdo\",\n        5: \"Red Op\"\n    },\n    eventos: {\n        1: \"generado\",\n        2: \"recibido_estafeta\",\n        3: \"entregado_estafeta\",\n        4: \"transmitido\"\n    }\n}\n\n\nglobal.set(\"validLoraKeys\", validLoraKeys);\nglobal.set(\"diccionario\", diccionario);\n\nmsg.payload = {\n    validLoraKeys,\n    diccionario\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -431,43 +417,6 @@
         "y": 160,
         "wires": [
             []
-        ]
-    },
-    {
-        "id": "ecee1a956ea6b9d9",
-        "type": "mqtt out",
-        "z": "97d5db5f6dd251ee",
-        "name": "",
-        "topic": "lora-ccic/",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "82b1f593c0d9937c",
-        "x": 380,
-        "y": 80,
-        "wires": []
-    },
-    {
-        "id": "611edfbf7959d5a2",
-        "type": "function",
-        "z": "97d5db5f6dd251ee",
-        "name": "randomize payload",
-        "func": "const loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5;\nconst nroMM = () => {\n    const nro = global.get(\"nroMM\") || 1;\n    global.set(\"nroMM\", nro + 1);\n    return nro;\n}\nconst trunc = (str) => parseFloat(str.charAt(0))\n\nconst generarPayloadInt = () => `<${loraId}>voltage=${rng(210, 230)}&temperature=${rng(5, 30)}`;\nconst generarPayloadExt = () => `<${10000 + loraId}>current=${rng(0.5, 10)}&raindrops=${rngB()}&gas=${rng(0, fuelLimit)}/${fuelLimit}&lat=-34.57475&lng=58.43552&alt=15`;\n\n/* \n    nro_mm: 2,\n    clasificacion: \"reservado\",\n    precedencia: \"rutina\",\n    cifrado: true,\n    destino: \"Puesto Comando\",\n    origen: \"Centro de Mensajes\",\n    evento: \"entregar\",\n*/\nconst generarMM = () => {\n    const clasificacion = trunc(rng(1, 4));             // 1: publico, 2: reservado, 3: confidencial, 4: secreto\n    const numeroMsj = nroMM();                              \n    const precedencia = trunc(rng(1, 4));               // 1: rutina, 2: prioridad, 3: inmediato, 4: flash\n    const cifrado = clasificacion >= 3 ? + rngB() : 0;      \n    const indexOrigen = trunc(rng(1, 5));               // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const indexDestino = indexOrigen % 5 + 1;           // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const evento = trunc(rng(1, 4));                    // 1: generado, 2: recibido_estafeta, 3: entregado_estafeta, 4: transmitido \n\n    const nro = numeroMsj % 65536;\n\n    const nroArr = [0, 0, 0];\n    nroArr[0] = (nro - nro % 256) / 256;\n    nroArr[1] = nro % 256;\n    nroArr[2] = 0;\n\n    const dataArr = [0, 0, 0];\n    dataArr[0] += (clasificacion - 1) * 2**0;    // bits 0 y 1\n    dataArr[0] += (precedencia - 1) * 2**2;      // bits 2 y 3\n    dataArr[0] += (indexOrigen - 1) * 2**4;      // bits 4, 5 y 6\n    dataArr[1] += (indexDestino - 1) * 2**0;     // bits 0, 1 y 2\n    dataArr[1] += (evento - 1) * 2**3;           // bits 3 y 4\n    dataArr[1] += cifrado * 2**5;                // bit 5\n\n    \n    // debug (no es outputteable a mqtt)\n    msg.metadata = {\n        clasificacion,\n        numeroMsj,\n        precedencia,\n        cifrado,\n        indexOrigen,\n        indexDestino, \n        evento,\n        bytesNumeroMsj: `${nroArr[0]} ${nroArr[1]} ${nroArr[2]}`,\n        bytesData: `${dataArr[0]} ${dataArr[1]} ${dataArr[2]}`,\n    };\n\n    return Buffer.from(`<${loraId}>nro=${String.fromCharCode(...nroArr)}&data=${String.fromCharCode(...dataArr)}`);\n}\n\nif (msg.payload === \"nodo interior\") {\n    msg.payload = generarPayloadInt();\n} else if (msg.payload === \"nodo exterior\") {\n    msg.payload = generarPayloadExt();\n} else if (msg.payload === \"mensaje militar\") {\n    msg.payload = generarMM();\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 190,
-        "y": 80,
-        "wires": [
-            [
-                "ecee1a956ea6b9d9"
-            ]
         ]
     },
     {
@@ -745,7 +694,7 @@
         "y": 260,
         "wires": [
             [
-                "0351ab83e20a433e"
+                "611edfbf7959d5a2"
             ]
         ]
     },
@@ -770,7 +719,7 @@
         "y": 320,
         "wires": [
             [
-                "0351ab83e20a433e"
+                "611edfbf7959d5a2"
             ]
         ]
     },
@@ -856,7 +805,7 @@
         "y": 380,
         "wires": [
             [
-                "0351ab83e20a433e"
+                "611edfbf7959d5a2"
             ]
         ]
     },
@@ -933,15 +882,6 @@
         ]
     },
     {
-        "id": "0351ab83e20a433e",
-        "type": "subflow:97d5db5f6dd251ee",
-        "z": "4f13ca8d684be14d",
-        "name": "",
-        "x": 530,
-        "y": 260,
-        "wires": []
-    },
-    {
         "id": "8fe334ecd6a161e8",
         "type": "subflow:205a3dbe388d752f",
         "z": "4f13ca8d684be14d",
@@ -951,6 +891,43 @@
         "wires": [
             [
                 "22164fe6f7d1a4c6"
+            ]
+        ]
+    },
+    {
+        "id": "ecee1a956ea6b9d9",
+        "type": "mqtt out",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "topic": "lora-ccic/",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "82b1f593c0d9937c",
+        "x": 700,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "611edfbf7959d5a2",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "randomize MQTT payload",
+        "func": "const loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5 ? 1 : 0;\nconst nroMM = () => {\n    const nro = global.get(\"nroMM\") || 1;\n    global.set(\"nroMM\", nro + 1);\n    return nro;\n}\nconst trunc = (str) => parseFloat(str.charAt(0))\n\nconst generarPayloadInt = () => `<${loraId}>voltage=${rng(210, 230)}&temperature=${rng(5, 30)}&emergency=${rngB()}`;\nconst generarPayloadExt = () => `<${10000 + loraId}>current=${rng(0.5, 10)}&raindrops=${rngB()}&gas=${rng(0, fuelLimit)}/${fuelLimit}&lat=-34.57475&lng=58.43552&alt=15`;\n\n/* \n    nro_mm: 2,\n    clasificacion: \"reservado\",\n    precedencia: \"rutina\",\n    cifrado: true,\n    destino: \"Puesto Comando\",\n    origen: \"Centro de Mensajes\",\n    evento: \"entregar\",\n*/\nconst generarMM = () => {\n    const clasificacion = trunc(rng(1, 4));             // 1: publico, 2: reservado, 3: confidencial, 4: secreto\n    const numeroMsj = nroMM();                              \n    const precedencia = trunc(rng(1, 4));               // 1: rutina, 2: prioridad, 3: inmediato, 4: flash\n    const cifrado = clasificacion >= 3 ? rngB() : 0;      \n    const indexOrigen = trunc(rng(1, 5));               // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const indexDestino = indexOrigen % 5 + 1;           // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const evento = trunc(rng(1, 4));                    // 1: generado, 2: recibido_estafeta, 3: entregado_estafeta, 4: transmitido \n\n    const nro = numeroMsj % 65536;\n\n    const nroArr = [0, 0, 0];\n    nroArr[0] = (nro - nro % 256) / 256;\n    nroArr[1] = nro % 256;\n    nroArr[2] = 0;\n\n    const dataArr = [0, 0, 0];\n    dataArr[0] += (clasificacion - 1) * 2**0;    // bits 0 y 1\n    dataArr[0] += (precedencia - 1) * 2**2;      // bits 2 y 3\n    dataArr[0] += (indexOrigen - 1) * 2**4;      // bits 4, 5 y 6\n    dataArr[1] += (indexDestino - 1) * 2**0;     // bits 0, 1 y 2\n    dataArr[1] += (evento - 1) * 2**3;           // bits 3 y 4\n    dataArr[1] += cifrado * 2**5;                // bit 5\n\n    \n    // debug (no es outputteable a mqtt)\n    msg.metadata = {\n        clasificacion,\n        numeroMsj,\n        precedencia,\n        cifrado,\n        indexOrigen,\n        indexDestino, \n        evento,\n        bytesNumeroMsj: `${nroArr[0]} ${nroArr[1]} ${nroArr[2]}`,\n        bytesData: `${dataArr[0]} ${dataArr[1]} ${dataArr[2]}`,\n    };\n\n    return Buffer.from(`<${loraId}>nro=${String.fromCharCode(...nroArr)}&data=${String.fromCharCode(...dataArr)}`);\n}\n\nif (msg.payload === \"nodo interior\") {\n    msg.payload = generarPayloadInt();\n} else if (msg.payload === \"nodo exterior\") {\n    msg.payload = generarPayloadExt();\n} else if (msg.payload === \"mensaje militar\") {\n    msg.payload = generarMM();\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 260,
+        "wires": [
+            [
+                "ecee1a956ea6b9d9"
             ]
         ]
     },
@@ -1427,6 +1404,289 @@
         "statusType": "auto",
         "x": 560,
         "y": 300,
+        "wires": []
+    },
+    {
+        "id": "2332b5fe09d16da5",
+        "type": "inject",
+        "z": "e47eef669dc31ecb",
+        "name": "nodo interior",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "nodo interior",
+        "payloadType": "str",
+        "x": 210,
+        "y": 200,
+        "wires": [
+            [
+                "9444b007af009c8b"
+            ]
+        ]
+    },
+    {
+        "id": "5891e613568ad335",
+        "type": "inject",
+        "z": "e47eef669dc31ecb",
+        "name": "nodo exterior",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "nodo exterior",
+        "payloadType": "str",
+        "x": 210,
+        "y": 260,
+        "wires": [
+            [
+                "9444b007af009c8b"
+            ]
+        ]
+    },
+    {
+        "id": "9444b007af009c8b",
+        "type": "function",
+        "z": "e47eef669dc31ecb",
+        "name": "randomize arduino payload",
+        "func": "const loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5 ? 1 : 0;\nconst trunc = (str) => parseFloat(str.charAt(0))\n\nconst generarPayloadInt = () => `<${loraId}>voltage=${rng(210, 230)}&temperature=${rng(5, 30)}&emergency=${rngB()}`;\nconst generarPayloadExt = () => `<${10000 + loraId}>current=${rng(0.5, 10)}&raindrops=${rngB()}&gas=${rng(0, fuelLimit)}/${fuelLimit}&lat=-34.57475&lng=58.43552&alt=15`;\n\nif (msg.payload === \"nodo interior\") {\n    msg.payload = generarPayloadInt();\n} else if (msg.payload === \"nodo exterior\") {\n    msg.payload = generarPayloadExt();\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 200,
+        "wires": [
+            [
+                "bef96e3648d75667",
+                "15d67eb839f741f8"
+            ]
+        ]
+    },
+    {
+        "id": "bef96e3648d75667",
+        "type": "debug",
+        "z": "e47eef669dc31ecb",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "5c65cc759ddb069d",
+        "type": "inject",
+        "z": "e47eef669dc31ecb",
+        "name": ".1 sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 100,
+        "wires": [
+            [
+                "081612d7abc59ea5"
+            ]
+        ]
+    },
+    {
+        "id": "081612d7abc59ea5",
+        "type": "function",
+        "z": "e47eef669dc31ecb",
+        "name": "save constants",
+        "func": "const validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"emergency\"]\nconst sensorica = {\n    voltage: \"1\",\n    current: \"2\",\n    gas: \"3\",\n    temperature: \"6\"\n};\nconst traduccion = {\n    voltage: \"Tensión (V)\",\n    current: \"Corriente (A)\",\n    gas: \"Combustible (L)\",\n    temperature: \"Temperatura (°C)\"\n}\n\n\nglobal.set(\"validLoraKeys\", validLoraKeys);\nglobal.set(\"sensorica\", sensorica);\nglobal.set(\"traduccion\", traduccion)\n\nmsg.payload = {\n    validLoraKeys,\n    sensorica,\n    traduccion\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 100,
+        "wires": [
+            [
+                "b69c26f5cc367e05"
+            ]
+        ]
+    },
+    {
+        "id": "b69c26f5cc367e05",
+        "type": "debug",
+        "z": "e47eef669dc31ecb",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "15d67eb839f741f8",
+        "type": "function",
+        "z": "e47eef669dc31ecb",
+        "name": "parser",
+        "func": "const validLoraKeys = global.get(\"validLoraKeys\");\nconst sensorica = global.get(\"sensorica\");\n\nconst loraPayload = msg.payload.substring(msg.payload.indexOf(\">\") + 1);\nlet loraData = {};\n\n\nloraPayload.split(\"&\").forEach(str => {\n    const arr = str.split(\"=\");\n    if (!validLoraKeys.includes(arr[0])) {\n        throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n    }\n    if (arr[0] in sensorica) {\n        loraData = {\n            ...loraData,\n            [arr[0]]: arr[1]\n        };\n    }\n    if (arr[0] === \"emergency\") {\n        loraData = {\n            ...loraData,\n            emergency: arr[1]\n        }\n    }\n\n});\n\n\nmsg.payload = loraData;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 200,
+        "wires": [
+            [
+                "cc3177255813ca6f"
+            ]
+        ]
+    },
+    {
+        "id": "fbadb8be383ff275",
+        "type": "debug",
+        "z": "e47eef669dc31ecb",
+        "name": "input",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "cc3177255813ca6f",
+        "type": "split",
+        "z": "e47eef669dc31ecb",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "key",
+        "x": 910,
+        "y": 200,
+        "wires": [
+            [
+                "a07ff4ca344e29e9",
+                "fbadb8be383ff275"
+            ]
+        ]
+    },
+    {
+        "id": "a07ff4ca344e29e9",
+        "type": "function",
+        "z": "e47eef669dc31ecb",
+        "name": "insert",
+        "func": "const sensorica = global.get(\"sensorica\");\nconst baseUrl = \"http://127.0.0.1:8000\";\nconst facilidadId = 1;\nlet body = {};\nlet url = \"\";\n\nconst isSensor = msg.key in sensorica;\n\nconst traduccion = global.get(\"traduccion\");\n\nif (isSensor) {\n    const id = parseInt(sensorica[msg.key]);\n    url = `${baseUrl}/api/facilidad/${facilidadId}/sensor/${id}/edit/`;\n    const nombre = traduccion[msg.key];\n    const indicador = msg.key === \"gas\" ? parseFloat(msg.payload.split(\"/\")[0]) : parseFloat(msg.payload);\n    body = {\n        id,\n        nombre,\n        indicador\n    };\n} else { // it should be an emergency!\n    if (msg.key !== \"emergency\") {\n        throw new Error(`error procesando esto: ${msg.key}`)\n    }\n    url = `${baseUrl}/api/facilidad/${facilidadId}/status`;\n    const status = msg.payload === \"1\" ? \"F\" : \"S\";\n    body = {\n        nombre: \"Red Cdo\",\n        status\n    }\n}\n\nmsg = {\n    payload: body,\n    url\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1050,
+        "y": 200,
+        "wires": [
+            [
+                "c59182bcf9ecdb64",
+                "ddbd587e3ae4622a"
+            ]
+        ]
+    },
+    {
+        "id": "c59182bcf9ecdb64",
+        "type": "http request",
+        "z": "e47eef669dc31ecb",
+        "name": "post http ok",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1210,
+        "y": 200,
+        "wires": [
+            [
+                "70ca2861ec2326f4"
+            ]
+        ]
+    },
+    {
+        "id": "ddbd587e3ae4622a",
+        "type": "debug",
+        "z": "e47eef669dc31ecb",
+        "name": "output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "url",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "70ca2861ec2326f4",
+        "type": "debug",
+        "z": "e47eef669dc31ecb",
+        "name": "output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1370,
+        "y": 200,
         "wires": []
     }
 ]
