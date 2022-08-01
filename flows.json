@@ -26,7 +26,7 @@
     {
         "id": "5f0d43a9dc0a4da7",
         "type": "tab",
-        "label": "test - MQTT comms",
+        "label": "tests - MQTT comms",
         "disabled": true,
         "info": "",
         "env": []
@@ -34,7 +34,7 @@
     {
         "id": "3540c13fef4eaf3c",
         "type": "tab",
-        "label": "tests - HTTP requests",
+        "label": "tests - Horus HTTP requests",
         "disabled": true,
         "info": "",
         "env": []
@@ -143,6 +143,72 @@
                 "wires": [
                     {
                         "id": "baf9389b5bf4a787",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "7c3d3a46f80e9b7d",
+        "type": "subflow",
+        "name": "Serial to SIGEFA API connector",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "15d67eb839f741f8"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 800,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "c59182bcf9ecdb64",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "bda60c0bd3eca39a",
+        "type": "subflow",
+        "name": "SIGEFA API to Serial connector",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "6fc9e2f7239c078d"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 680,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "2dda3e74810fe7c1",
                         "port": 0
                     }
                 ]
@@ -277,7 +343,7 @@
         "type": "function",
         "z": "5842f7d28b260c86",
         "name": "save other constants",
-        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"emergency\"]\nconst diccionario = {\n    clasificaciones: {\n        1: \"publico\",\n        2: \"reservado\",\n        3: \"confidencial\",\n        4: \"secreto\"\n    },\n    precedencias: {\n        1: \"rutina\",\n        2: \"prioridad\",\n        3: \"inmediato\",\n        4: \"flash\"\n    },\n    redes: {\n        1: \"Red Cdo Op\",\n        2: \"Red Mat Pers\",\n        3: \"Red Icia\",\n        4: \"Red Cdo\",\n        5: \"Red Op\"\n    },\n    eventos: {\n        1: \"generado\",\n        2: \"recibido_estafeta\",\n        3: \"entregado_estafeta\",\n        4: \"transmitido\"\n    }\n}\n\nhorusAPI = {\n    ...horusAPI,\n    validLoraKeys,\n    diccionario\n}\n\nglobal.set(\"horusAPI\", horusAPI);\n\nmsg.payload = {\n    validLoraKeys,\n    diccionario\n}\n\nreturn msg;",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"status\"]\nconst diccionario = {\n    clasificaciones: {\n        1: \"publico\",\n        2: \"reservado\",\n        3: \"confidencial\",\n        4: \"secreto\"\n    },\n    precedencias: {\n        1: \"rutina\",\n        2: \"prioridad\",\n        3: \"inmediato\",\n        4: \"flash\"\n    },\n    redes: {\n        1: \"Red Cdo Op\",\n        2: \"Red Mat Pers\",\n        3: \"Red Icia\",\n        4: \"Red Cdo\",\n        5: \"Red Op\"\n    },\n    eventos: {\n        1: \"generado\",\n        2: \"recibido_estafeta\",\n        3: \"entregado_estafeta\",\n        4: \"transmitido\"\n    }\n}\n\nhorusAPI = {\n    ...horusAPI,\n    validLoraKeys,\n    diccionario\n}\n\nglobal.set(\"horusAPI\", horusAPI);\n\nmsg.payload = {\n    validLoraKeys,\n    diccionario\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -502,6 +568,7 @@
         "id": "cb8b6a3cb85a66f6",
         "type": "debug",
         "z": "205a3dbe388d752f",
+        "d": true,
         "name": "requests",
         "active": true,
         "tosidebar": true,
@@ -520,7 +587,7 @@
         "type": "function",
         "z": "205a3dbe388d752f",
         "name": "LoRa parser",
-        "func": "const diccionario = global.get(\"horusAPI\").diccionario;\n\nconst requests = [];\n\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\n\nif (!msg.payload.loraData.nro_mm) {\n    const nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\n    const capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\n    requests.push({\n        endpoint: \"nivel-combus\",\n        type: \"metrica\",\n        body: {\n            generador,\n            nivel,\n            capacidad,\n            timestamp\n        }\n    });\n\n    requests.push({\n        endpoint: \"alimentacion\",\n        type: \"metrica\",\n        body: {\n            generador,\n            tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n            corriente: parseFloat(msg.payload.loraData.current) || 1.0,\n            timestamp\n        }\n    });\n\n    // todo endpoint GPS\n    /* requests.push({\n        endpoint: \"geolocalization\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            latitude: parseFloat(msg.payload.loraData.lat) || 0,\n            longitude: parseFloat(msg.payload.loraData.lng) || 0,\n            altitude: parseFloat(msg.payload.loraData.alt) || 0,\n            timestamp,\n        }\n    })*/\n\n    requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"rain\",\n            valor: msg.payload.loraData.raindrops === \"1\",\n            timestamp\n        }\n    });\n\n\n    // deprecated\n    /* requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"presence\",\n            valor: msg.payload.loraData.presence === \"1\",\n            timestamp\n        }\n    }); */\n} else {\n    // ToDo - parsear data de los mensajes militares\n    /* requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm: 2,\n            clasificacion: \"reservado\",\n            precedencia: \"rutina\",\n            cifrado: true,\n            destino: \"Puesto Comando\",\n            origen: \"Centro de Mensajes\",\n            evento: \"entregar\",\n            timestamp\n        }\n    })\n    */\n\n    const nro_mm = msg.payload.loraData.nro_mm;\n    const clasificacion = diccionario.clasificaciones[msg.payload.loraData.clasificacion];\n    const precedencia = diccionario.precedencias[msg.payload.loraData.precedencia];\n    const cifrado = msg.payload.loraData.cifrado === 1;\n    const destino = diccionario.redes[msg.payload.loraData.destino];\n    const origen = diccionario.redes[msg.payload.loraData.origen];\n    const evento = diccionario.eventos[msg.payload.loraData.evento];\n\n    requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm,\n            clasificacion,\n            precedencia,\n            cifrado,\n            destino,\n            origen,\n            evento,\n            timestamp\n        }\n    })\n}\n\nmsg.payload = requests;\nreturn msg;",
+        "func": "const diccionario = global.get(\"horusAPI\").diccionario;\nconst traduccionEstados = {\n    S: \"en servicio\",\n    L: \"servicio limitado\",\n    F: \"fuera de servicio\"\n}\n\nconst requests = [];\n\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\nconst estado = traduccionEstados[msg.payload.loraData.status] || \"fuera de servicio\"\n\nif (!msg.payload.loraData.nro_mm) {\n    const nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\n    const capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\n    requests.push({\n        endpoint: \"nivel-combus\",\n        type: \"metrica\",\n        body: {\n            generador,\n            nivel,\n            capacidad,\n            timestamp\n        }\n    });\n\n    requests.push({\n        endpoint: \"alimentacion\",\n        type: \"metrica\",\n        body: {\n            generador,\n            tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n            corriente: parseFloat(msg.payload.loraData.current) || 1.0,\n            timestamp\n        }\n    });\n\n    // todo endpoint GPS\n    /* requests.push({\n        endpoint: \"geolocalization\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            latitude: parseFloat(msg.payload.loraData.lat) || 0,\n            longitude: parseFloat(msg.payload.loraData.lng) || 0,\n            altitude: parseFloat(msg.payload.loraData.alt) || 0,\n            timestamp,\n        }\n    })*/\n\n    requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"rain\",\n            valor: msg.payload.loraData.raindrops === \"1\",\n            timestamp\n        }\n    });\n\n    requests.push({\n        endpoint: \"estado-servicio\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            estado,\n            timestamp\n        }\n    })\n\n\n    // deprecated\n    /* requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"presence\",\n            valor: msg.payload.loraData.presence === \"1\",\n            timestamp\n        }\n    }); */\n} else {\n    // ToDo - parsear data de los mensajes militares\n    /* requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm: 2,\n            clasificacion: \"reservado\",\n            precedencia: \"rutina\",\n            cifrado: true,\n            destino: \"Puesto Comando\",\n            origen: \"Centro de Mensajes\",\n            evento: \"entregar\",\n            timestamp\n        }\n    })\n    */\n\n    const nro_mm = msg.payload.loraData.nro_mm;\n    const clasificacion = diccionario.clasificaciones[msg.payload.loraData.clasificacion];\n    const precedencia = diccionario.precedencias[msg.payload.loraData.precedencia];\n    const cifrado = msg.payload.loraData.cifrado === 1;\n    const destino = diccionario.redes[msg.payload.loraData.destino];\n    const origen = diccionario.redes[msg.payload.loraData.origen];\n    const evento = diccionario.eventos[msg.payload.loraData.evento];\n\n    requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm,\n            clasificacion,\n            precedencia,\n            cifrado,\n            destino,\n            origen,\n            evento,\n            timestamp\n        }\n    })\n}\n\nmsg.payload = requests;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -539,6 +606,7 @@
         "id": "a3411b74910fc7e5",
         "type": "debug",
         "z": "205a3dbe388d752f",
+        "d": true,
         "name": "facility output",
         "active": true,
         "tosidebar": true,
@@ -553,18 +621,172 @@
         "wires": []
     },
     {
+        "id": "15d67eb839f741f8",
+        "type": "function",
+        "z": "7c3d3a46f80e9b7d",
+        "name": "LoRa parser",
+        "func": "const { validLoraKeys, sensorica } = global.get(\"sigefaAPI\");\n\nconst loraPayload = msg.payload.substring(msg.payload.indexOf(\":\") + 1);\nlet loraData = {};\n\nloraPayload.split(\" \").forEach(str => {\n    if (str.length > 0) {\n        const arr = str.replace(\",\", \"\").split(\"=\");\n        if (!validLoraKeys.includes(arr[0])) {\n            throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n        }\n        if (arr[0] in sensorica) {\n            loraData = {\n                ...loraData,\n                [arr[0]]: arr[1]\n            };\n        }\n        if (arr[0] === \"emergency\") {\n            loraData = {\n                ...loraData,\n                emergency: arr[1]\n            }\n        } \n    }\n\n});\n\n\nmsg.payload = loraData;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 80,
+        "wires": [
+            [
+                "cc3177255813ca6f",
+                "f2369b3a41ab9e19"
+            ]
+        ]
+    },
+    {
+        "id": "cc3177255813ca6f",
+        "type": "split",
+        "z": "7c3d3a46f80e9b7d",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "key",
+        "x": 350,
+        "y": 80,
+        "wires": [
+            [
+                "a07ff4ca344e29e9"
+            ]
+        ]
+    },
+    {
+        "id": "a07ff4ca344e29e9",
+        "type": "function",
+        "z": "7c3d3a46f80e9b7d",
+        "name": "request",
+        "func": "const { sensorica, baseUrl, facilidadId, traduccion } = global.get(\"sigefaAPI\");\nlet body = {};\nlet url = \"\";\n\nconst isSensor = msg.key in sensorica;\n\nif (isSensor) {\n    const id = parseInt(sensorica[msg.key]);\n    url = `${baseUrl}/api/facilidad/${facilidadId}/sensor/${id}/edit/`;\n    const nombre = traduccion[msg.key];\n    const indicador = msg.key === \"gas\" ? parseFloat(msg.payload.split(\"/\")[0]) : parseFloat(msg.payload);\n    body = {\n        id,\n        nombre,\n        indicador\n    };\n} else { // it should be an emergency!\n    if (msg.key !== \"emergency\") {\n        throw new Error(`error procesando esto: ${msg.key}`)\n    }\n    url = `${baseUrl}/api/facilidad/${facilidadId}/status`;\n    const status = msg.payload === \"1\" ? \"F\" : \"S\";\n    body = {\n        nombre: \"Red Cdo\",\n        status\n    }\n}\n\nmsg = {\n    payload: body,\n    url\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 80,
+        "wires": [
+            [
+                "c59182bcf9ecdb64"
+            ]
+        ]
+    },
+    {
+        "id": "c59182bcf9ecdb64",
+        "type": "http request",
+        "z": "7c3d3a46f80e9b7d",
+        "name": "post http ok",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 670,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f2369b3a41ab9e19",
+        "type": "debug",
+        "z": "7c3d3a46f80e9b7d",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 380,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "6fc9e2f7239c078d",
+        "type": "function",
+        "z": "bda60c0bd3eca39a",
+        "name": "request",
+        "func": "const { baseUrl, facilidadId } = global.get(\"sigefaAPI\");\nconst url = `${baseUrl}/api/facilidad/${facilidadId}/status`;\n\nmsg.url = url;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "9b4e9dc7ee88d343"
+            ]
+        ]
+    },
+    {
+        "id": "9b4e9dc7ee88d343",
+        "type": "http request",
+        "z": "bda60c0bd3eca39a",
+        "name": "get http ok",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "2dda3e74810fe7c1"
+            ]
+        ]
+    },
+    {
+        "id": "2dda3e74810fe7c1",
+        "type": "function",
+        "z": "bda60c0bd3eca39a",
+        "name": "watcher",
+        "func": "let sigefaAPI = global.get(\"sigefaAPI\");\n\nconst status = msg.payload.status;\nif (![\"F\", \"S\", \"L\"].includes(status)) {\n    throw new Error (\"status desconocido: \" + status);\n}\n\nif (!sigefaAPI.status || status !== sigefaAPI.status) {\n    msg.payload = `USB: status=${status}`;\n    sigefaAPI = {\n        ...sigefaAPI,\n        status\n    }\n    global.set(\"sigefaAPI\", sigefaAPI);\n    return msg;\n}\n\nreturn;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "733cf0b48e275753",
         "type": "catch",
         "z": "4f13ca8d684be14d",
         "name": "http error",
         "scope": [
-            "6295cfb665a849a5",
-            "fa0a88f356023ec6",
-            "6f825c20a5f8abf5"
+            "8fe334ecd6a161e8",
+            "a3fe606a94c5478c",
+            "a141e0b894432d41"
         ],
         "uncaught": false,
-        "x": 180,
-        "y": 620,
+        "x": 920,
+        "y": 380,
         "wires": [
             [
                 "4c97ebb598b2fc3d"
@@ -584,8 +806,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 400,
-        "y": 620,
+        "x": 1140,
+        "y": 380,
         "wires": []
     },
     {
@@ -647,8 +869,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 180,
-        "y": 460,
+        "x": 160,
+        "y": 400,
         "wires": [
             [
                 "8fe334ecd6a161e8",
@@ -660,7 +882,7 @@
         "id": "25e68572504e173b",
         "type": "debug",
         "z": "4f13ca8d684be14d",
-        "name": "mqtt messages",
+        "name": "mqtt input",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -669,8 +891,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 420,
-        "y": 420,
+        "x": 380,
+        "y": 340,
         "wires": []
     },
     {
@@ -690,8 +912,8 @@
         "topic": "",
         "payload": "nodo interior",
         "payloadType": "str",
-        "x": 190,
-        "y": 260,
+        "x": 810,
+        "y": 80,
         "wires": [
             [
                 "611edfbf7959d5a2"
@@ -715,8 +937,8 @@
         "topic": "",
         "payload": "nodo exterior",
         "payloadType": "str",
-        "x": 190,
-        "y": 320,
+        "x": 810,
+        "y": 140,
         "wires": [
             [
                 "611edfbf7959d5a2"
@@ -780,8 +1002,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 720,
-        "y": 520,
+        "x": 700,
+        "y": 460,
         "wires": []
     },
     {
@@ -801,8 +1023,8 @@
         "topic": "",
         "payload": "mensaje militar",
         "payloadType": "str",
-        "x": 200,
-        "y": 380,
+        "x": 820,
+        "y": 200,
         "wires": [
             [
                 "611edfbf7959d5a2"
@@ -886,8 +1108,8 @@
         "type": "subflow:205a3dbe388d752f",
         "z": "4f13ca8d684be14d",
         "name": "",
-        "x": 470,
-        "y": 520,
+        "x": 450,
+        "y": 460,
         "wires": [
             [
                 "22164fe6f7d1a4c6"
@@ -908,8 +1130,8 @@
         "correl": "",
         "expiry": "",
         "broker": "82b1f593c0d9937c",
-        "x": 700,
-        "y": 260,
+        "x": 1320,
+        "y": 80,
         "wires": []
     },
     {
@@ -917,19 +1139,59 @@
         "type": "function",
         "z": "4f13ca8d684be14d",
         "name": "randomize MQTT payload",
-        "func": "let horusAPI = global.get(\"horusAPI\");\nconst loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5 ? 1 : 0;\nconst nroMM = () => {\n    const nro = horusAPI.nroMM || 1;\n    horusAPI = {\n        ...horusAPI,\n        nroMM: nro + 1\n    }\n    global.set(\"horusAPI\", horusAPI);\n    return nro;\n}\nconst trunc = (str) => parseFloat(str.charAt(0))\n\nconst generarPayloadInt = () => `<${loraId}>voltage=${rng(210, 230)}&temperature=${rng(5, 30)}&emergency=${rngB()}`;\nconst generarPayloadExt = () => `<${10000 + loraId}>current=${rng(0.5, 10)}&raindrops=${rngB()}&gas=${rng(0, fuelLimit)}/${fuelLimit}&lat=-34.57475&lng=58.43552&alt=15`;\n\n/* \n    nro_mm: 2,\n    clasificacion: \"reservado\",\n    precedencia: \"rutina\",\n    cifrado: true,\n    destino: \"Puesto Comando\",\n    origen: \"Centro de Mensajes\",\n    evento: \"entregar\",\n*/\nconst generarMM = () => {\n    const clasificacion = trunc(rng(1, 4));             // 1: publico, 2: reservado, 3: confidencial, 4: secreto\n    const numeroMsj = nroMM();                              \n    const precedencia = trunc(rng(1, 4));               // 1: rutina, 2: prioridad, 3: inmediato, 4: flash\n    const cifrado = clasificacion >= 3 ? rngB() : 0;      \n    const indexOrigen = trunc(rng(1, 5));               // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const indexDestino = indexOrigen % 5 + 1;           // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const evento = trunc(rng(1, 4));                    // 1: generado, 2: recibido_estafeta, 3: entregado_estafeta, 4: transmitido \n\n    const nro = numeroMsj % 65536;\n\n    const nroArr = [0, 0, 0];\n    nroArr[0] = (nro - nro % 256) / 256;\n    nroArr[1] = nro % 256;\n    nroArr[2] = 0;\n\n    const dataArr = [0, 0, 0];\n    dataArr[0] += (clasificacion - 1) * 2**0;    // bits 0 y 1\n    dataArr[0] += (precedencia - 1) * 2**2;      // bits 2 y 3\n    dataArr[0] += (indexOrigen - 1) * 2**4;      // bits 4, 5 y 6\n    dataArr[1] += (indexDestino - 1) * 2**0;     // bits 0, 1 y 2\n    dataArr[1] += (evento - 1) * 2**3;           // bits 3 y 4\n    dataArr[1] += cifrado * 2**5;                // bit 5\n\n    \n    // debug (no es outputteable a mqtt)\n    msg.metadata = {\n        clasificacion,\n        numeroMsj,\n        precedencia,\n        cifrado,\n        indexOrigen,\n        indexDestino, \n        evento,\n        bytesNumeroMsj: `${nroArr[0]} ${nroArr[1]} ${nroArr[2]}`,\n        bytesData: `${dataArr[0]} ${dataArr[1]} ${dataArr[2]}`,\n    };\n\n    return Buffer.from(`<${loraId}>nro=${String.fromCharCode(...nroArr)}&data=${String.fromCharCode(...dataArr)}`);\n}\n\nif (msg.payload === \"nodo interior\") {\n    msg.payload = generarPayloadInt();\n} else if (msg.payload === \"nodo exterior\") {\n    msg.payload = generarPayloadExt();\n} else if (msg.payload === \"mensaje militar\") {\n    msg.payload = generarMM();\n}\n\nreturn msg;",
+        "func": "let horusAPI = global.get(\"horusAPI\");\nconst loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5 ? 1 : 0;\nconst nroMM = () => {\n    const nro = horusAPI.nroMM || 1;\n    horusAPI = {\n        ...horusAPI,\n        nroMM: nro + 1\n    }\n    global.set(\"horusAPI\", horusAPI);\n    return nro;\n}\nconst trunc = (str) => parseFloat(str.charAt(0))\nconst possibleStatus = ['S', 'L', 'F']\n\nconst generarPayloadInt = () => `<${loraId}>voltage=${rng(210, 230)}&temperature=${rng(5, 30)}&status=${possibleStatus[trunc(rng(0, 2.99))]}`;\nconst generarPayloadExt = () => `<${10000 + loraId}>current=${rng(0.5, 10)}&raindrops=${rngB()}&gas=${rng(0, fuelLimit)}/${fuelLimit}&lat=-34.57475&lng=58.43552&alt=15`;\n\n/* \n    nro_mm: 2,\n    clasificacion: \"reservado\",\n    precedencia: \"rutina\",\n    cifrado: true,\n    destino: \"Puesto Comando\",\n    origen: \"Centro de Mensajes\",\n    evento: \"entregar\",\n*/\nconst generarMM = () => {\n    const clasificacion = trunc(rng(1, 4));             // 1: publico, 2: reservado, 3: confidencial, 4: secreto\n    const numeroMsj = nroMM();                              \n    const precedencia = trunc(rng(1, 4));               // 1: rutina, 2: prioridad, 3: inmediato, 4: flash\n    const cifrado = clasificacion >= 3 ? rngB() : 0;      \n    const indexOrigen = trunc(rng(1, 5));               // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const indexDestino = indexOrigen % 5 + 1;           // 1: Red Cdo Op, 2: Red Mat Pers, 3: Red Icia, 4: Red Cdo, 5: Red Op\n    const evento = trunc(rng(1, 4));                    // 1: generado, 2: recibido_estafeta, 3: entregado_estafeta, 4: transmitido \n\n    const nro = numeroMsj % 65536;\n\n    const nroArr = [0, 0, 0];\n    nroArr[0] = (nro - nro % 256) / 256;\n    nroArr[1] = nro % 256;\n    nroArr[2] = 0;\n\n    const dataArr = [0, 0, 0];\n    dataArr[0] += (clasificacion - 1) * 2**0;    // bits 0 y 1\n    dataArr[0] += (precedencia - 1) * 2**2;      // bits 2 y 3\n    dataArr[0] += (indexOrigen - 1) * 2**4;      // bits 4, 5 y 6\n    dataArr[1] += (indexDestino - 1) * 2**0;     // bits 0, 1 y 2\n    dataArr[1] += (evento - 1) * 2**3;           // bits 3 y 4\n    dataArr[1] += cifrado * 2**5;                // bit 5\n\n    \n    // debug (no es outputteable a mqtt)\n    msg.metadata = {\n        clasificacion,\n        numeroMsj,\n        precedencia,\n        cifrado,\n        indexOrigen,\n        indexDestino, \n        evento,\n        bytesNumeroMsj: `${nroArr[0]} ${nroArr[1]} ${nroArr[2]}`,\n        bytesData: `${dataArr[0]} ${dataArr[1]} ${dataArr[2]}`,\n    };\n\n    return Buffer.from(`<${loraId}>nro=${String.fromCharCode(...nroArr)}&data=${String.fromCharCode(...dataArr)}`);\n}\n\nif (msg.payload === \"nodo interior\") {\n    msg.payload = generarPayloadInt();\n} else if (msg.payload === \"nodo exterior\") {\n    msg.payload = generarPayloadExt();\n} else if (msg.payload === \"mensaje militar\") {\n    msg.payload = generarMM();\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 470,
-        "y": 260,
+        "x": 1090,
+        "y": 80,
         "wires": [
             [
                 "ecee1a956ea6b9d9"
             ]
         ]
+    },
+    {
+        "id": "96d3f472694c4a0b",
+        "type": "comment",
+        "z": "4f13ca8d684be14d",
+        "name": "Configuración inicial",
+        "info": "",
+        "x": 390,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "ef51bfd07a3d1a33",
+        "type": "comment",
+        "z": "4f13ca8d684be14d",
+        "name": "Simulador payload entrante",
+        "info": "",
+        "x": 1080,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "4a52bdcb9640b138",
+        "type": "comment",
+        "z": "4f13ca8d684be14d",
+        "name": "Conector API",
+        "info": "",
+        "x": 390,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "602af5277e0846ad",
+        "type": "comment",
+        "z": "4f13ca8d684be14d",
+        "name": "Debug",
+        "info": "",
+        "x": 1010,
+        "y": 280,
+        "wires": []
     },
     {
         "id": "2332b5fe09d16da5",
@@ -948,33 +1210,8 @@
         "topic": "",
         "payload": "nodo interior",
         "payloadType": "str",
-        "x": 210,
-        "y": 200,
-        "wires": [
-            [
-                "9444b007af009c8b"
-            ]
-        ]
-    },
-    {
-        "id": "5891e613568ad335",
-        "type": "inject",
-        "z": "e47eef669dc31ecb",
-        "name": "nodo exterior",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "nodo exterior",
-        "payloadType": "str",
-        "x": 210,
-        "y": 260,
+        "x": 830,
+        "y": 120,
         "wires": [
             [
                 "9444b007af009c8b"
@@ -985,18 +1222,18 @@
         "id": "9444b007af009c8b",
         "type": "function",
         "z": "e47eef669dc31ecb",
-        "name": "randomize arduino payload",
-        "func": "const loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5 ? 1 : 0;\nconst trunc = (str) => parseFloat(str.charAt(0))\n\nconst generarPayloadInt = () => `<${loraId}>voltage=${rng(210, 230)}&temperature=${rng(5, 30)}&emergency=${rngB()}`;\nconst generarPayloadExt = () => `<${10000 + loraId}>current=${rng(0.5, 10)}&raindrops=${rngB()}&gas=${rng(0, fuelLimit)}/${fuelLimit}&lat=-34.57475&lng=58.43552&alt=15`;\n\nif (msg.payload === \"nodo interior\") {\n    msg.payload = generarPayloadInt();\n} else if (msg.payload === \"nodo exterior\") {\n    msg.payload = generarPayloadExt();\n}\n\nreturn msg;",
+        "name": "randomize serial payload",
+        "func": "const loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5 ? 1 : 0;\nconst trunc = (str) => parseFloat(str.charAt(0))\n\nconst generarPayloadNodo = () => `USB: voltage=${rng(210, 230)}, temperature=${rng(5, 30)}, emergency=${rngB()}, current=${rng(0.5, 10)}, gas=${rng(0, fuelLimit)}`;\n\nmsg.payload = generarPayloadNodo();\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
-        "y": 200,
+        "x": 1070,
+        "y": 120,
         "wires": [
             [
-                "15d67eb839f741f8"
+                "143b7c72faa51ff3"
             ]
         ]
     },
@@ -1034,7 +1271,7 @@
         "type": "function",
         "z": "e47eef669dc31ecb",
         "name": "save constants",
-        "func": "let sigefaAPI = global.get(\"sigefaAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"emergency\"]\nconst sensorica = {\n    voltage: \"1\",\n    current: \"2\",\n    gas: \"3\",\n    temperature: \"6\"\n};\nconst traduccion = {\n    voltage: \"Tensión (V)\",\n    current: \"Corriente (A)\",\n    gas: \"Combustible (L)\",\n    temperature: \"Temperatura (°C)\"\n}\nconst facilidadId = 1;\nconst baseUrl = \"http://127.0.0.1:8000\";\n\nmsg.payload = {\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl\n}\n\nsigefaAPI = {\n    ...sigefaAPI,\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl\n}\nglobal.set(\"sigefaAPI\", sigefaAPI)\n\nreturn msg;",
+        "func": "let sigefaAPI = global.get(\"sigefaAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"emergency\"]\nconst sensorica = {\n    voltage: \"1\",\n    current: \"2\",\n    gas: \"3\",\n    temperature: \"6\"\n};\nconst traduccion = {\n    voltage: \"Tensión (V)\",\n    current: \"Corriente (A)\",\n    gas: \"Combustible (L)\",\n    temperature: \"Temperatura (°C)\"\n}\nconst facilidadId = 3;\nconst baseUrl = \"http://127.0.0.1:8000\";\n\nmsg.payload = {\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl\n}\n\nsigefaAPI = {\n    ...sigefaAPI,\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl\n}\nglobal.set(\"sigefaAPI\", sigefaAPI)\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1052,103 +1289,24 @@
         "id": "b69c26f5cc367e05",
         "type": "debug",
         "z": "e47eef669dc31ecb",
-        "name": "debug 2",
+        "name": "init debug",
         "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 580,
+        "x": 540,
         "y": 120,
         "wires": []
-    },
-    {
-        "id": "15d67eb839f741f8",
-        "type": "function",
-        "z": "e47eef669dc31ecb",
-        "name": "parser",
-        "func": "const { validLoraKeys, sensorica } = global.get(\"sigefaAPI\");\n\nconst loraPayload = msg.payload.substring(msg.payload.indexOf(\">\") + 1);\nlet loraData = {};\n\nloraPayload.split(\"&\").forEach(str => {\n    const arr = str.split(\"=\");\n    if (!validLoraKeys.includes(arr[0])) {\n        throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n    }\n    if (arr[0] in sensorica) {\n        loraData = {\n            ...loraData,\n            [arr[0]]: arr[1]\n        };\n    }\n    if (arr[0] === \"emergency\") {\n        loraData = {\n            ...loraData,\n            emergency: arr[1]\n        }\n    }\n\n});\n\n\nmsg.payload = loraData;\n\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 670,
-        "y": 200,
-        "wires": [
-            [
-                "cc3177255813ca6f"
-            ]
-        ]
-    },
-    {
-        "id": "cc3177255813ca6f",
-        "type": "split",
-        "z": "e47eef669dc31ecb",
-        "name": "",
-        "splt": "\\n",
-        "spltType": "str",
-        "arraySplt": 1,
-        "arraySpltType": "len",
-        "stream": false,
-        "addname": "key",
-        "x": 810,
-        "y": 200,
-        "wires": [
-            [
-                "a07ff4ca344e29e9"
-            ]
-        ]
-    },
-    {
-        "id": "a07ff4ca344e29e9",
-        "type": "function",
-        "z": "e47eef669dc31ecb",
-        "name": "request",
-        "func": "const { sensorica, baseUrl, facilidadId, traduccion } = global.get(\"sigefaAPI\");\nlet body = {};\nlet url = \"\";\n\nconst isSensor = msg.key in sensorica;\n\nif (isSensor) {\n    const id = parseInt(sensorica[msg.key]);\n    url = `${baseUrl}/api/facilidad/${facilidadId}/sensor/${id}/edit/`;\n    const nombre = traduccion[msg.key];\n    const indicador = msg.key === \"gas\" ? parseFloat(msg.payload.split(\"/\")[0]) : parseFloat(msg.payload);\n    body = {\n        id,\n        nombre,\n        indicador\n    };\n} else { // it should be an emergency!\n    if (msg.key !== \"emergency\") {\n        throw new Error(`error procesando esto: ${msg.key}`)\n    }\n    url = `${baseUrl}/api/facilidad/${facilidadId}/status`;\n    const status = msg.payload === \"1\" ? \"F\" : \"S\";\n    body = {\n        nombre: \"Red Cdo\",\n        status\n    }\n}\n\nmsg = {\n    payload: body,\n    url\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 960,
-        "y": 200,
-        "wires": [
-            [
-                "c59182bcf9ecdb64"
-            ]
-        ]
-    },
-    {
-        "id": "c59182bcf9ecdb64",
-        "type": "http request",
-        "z": "e47eef669dc31ecb",
-        "name": "post http ok",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 1130,
-        "y": 200,
-        "wires": [
-            [
-                "70ca2861ec2326f4"
-            ]
-        ]
     },
     {
         "id": "70ca2861ec2326f4",
         "type": "debug",
         "z": "e47eef669dc31ecb",
-        "name": "output",
+        "name": "http response",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -1157,8 +1315,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1290,
-        "y": 200,
+        "x": 620,
+        "y": 420,
         "wires": []
     },
     {
@@ -1183,53 +1341,11 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 190,
-        "y": 340,
+        "x": 130,
+        "y": 540,
         "wires": [
             [
-                "6fc9e2f7239c078d"
-            ]
-        ]
-    },
-    {
-        "id": "6fc9e2f7239c078d",
-        "type": "function",
-        "z": "e47eef669dc31ecb",
-        "name": "request",
-        "func": "const { baseUrl, facilidadId } = global.get(\"sigefaAPI\");\nconst url = `${baseUrl}/api/facilidad/${facilidadId}/status`;\n\nmsg.url = url;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 340,
-        "y": 340,
-        "wires": [
-            [
-                "9b4e9dc7ee88d343"
-            ]
-        ]
-    },
-    {
-        "id": "9b4e9dc7ee88d343",
-        "type": "http request",
-        "z": "e47eef669dc31ecb",
-        "name": "get http ok",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 510,
-        "y": 340,
-        "wires": [
-            [
-                "2dda3e74810fe7c1"
+                "d1c3ee5444b18632"
             ]
         ]
     },
@@ -1254,30 +1370,11 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 200,
-        "y": 400,
+        "x": 120,
+        "y": 620,
         "wires": [
             [
-                "6fc9e2f7239c078d"
-            ]
-        ]
-    },
-    {
-        "id": "2dda3e74810fe7c1",
-        "type": "function",
-        "z": "e47eef669dc31ecb",
-        "name": "watcher",
-        "func": "let sigefaAPI = global.get(\"sigefaAPI\");\n\nconst status = msg.payload.status;\nif (![\"F\", \"S\", \"L\"].includes(status)) {\n    throw new Error (\"status desconocido: \" + status);\n}\n\nif (!sigefaAPI.status || status !== sigefaAPI.status) {\n    msg.payload = status;\n    sigefaAPI = {\n        ...sigefaAPI,\n        status\n    }\n    global.set(\"sigefaAPI\", sigefaAPI);\n    return msg;\n}\n\nreturn;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 680,
-        "y": 340,
-        "wires": [
-            [
-                "626abc06e299e324"
+                "d1c3ee5444b18632"
             ]
         ]
     },
@@ -1285,16 +1382,165 @@
         "id": "626abc06e299e324",
         "type": "debug",
         "z": "e47eef669dc31ecb",
-        "name": "debug 3",
+        "name": "serial payload",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 840,
-        "y": 340,
+        "x": 620,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "143b7c72faa51ff3",
+        "type": "link out",
+        "z": "e47eef669dc31ecb",
+        "name": "serial payload out",
+        "mode": "link",
+        "links": [
+            "9712c92fc29c0f3d"
+        ],
+        "x": 1235,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "9712c92fc29c0f3d",
+        "type": "link in",
+        "z": "e47eef669dc31ecb",
+        "name": "serial payload in",
+        "links": [
+            "143b7c72faa51ff3"
+        ],
+        "x": 155,
+        "y": 380,
+        "wires": [
+            [
+                "b2db8885f0a8ca49",
+                "0ab33ef8e0e83f55"
+            ]
+        ]
+    },
+    {
+        "id": "ac436177d0aca753",
+        "type": "comment",
+        "z": "e47eef669dc31ecb",
+        "name": "Configuración inicial",
+        "info": "",
+        "x": 350,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "b2db8885f0a8ca49",
+        "type": "subflow:7c3d3a46f80e9b7d",
+        "z": "e47eef669dc31ecb",
+        "name": "",
+        "x": 370,
+        "y": 420,
+        "wires": [
+            [
+                "70ca2861ec2326f4"
+            ]
+        ]
+    },
+    {
+        "id": "0ab33ef8e0e83f55",
+        "type": "debug",
+        "z": "e47eef669dc31ecb",
+        "name": "serial input",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 310,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "e147db9a3f48c77c",
+        "type": "comment",
+        "z": "e47eef669dc31ecb",
+        "name": "Simulador payload entrante",
+        "info": "",
+        "x": 1040,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "f6e01edc9908e90c",
+        "type": "comment",
+        "z": "e47eef669dc31ecb",
+        "name": "Conector API",
+        "info": "",
+        "x": 350,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "d1c3ee5444b18632",
+        "type": "subflow:bda60c0bd3eca39a",
+        "z": "e47eef669dc31ecb",
+        "name": "",
+        "x": 370,
+        "y": 540,
+        "wires": [
+            [
+                "626abc06e299e324"
+            ]
+        ]
+    },
+    {
+        "id": "512185a09984d94d",
+        "type": "catch",
+        "z": "e47eef669dc31ecb",
+        "name": "http error",
+        "scope": [
+            "d1c3ee5444b18632",
+            "b2db8885f0a8ca49"
+        ],
+        "uncaught": false,
+        "x": 900,
+        "y": 320,
+        "wires": [
+            [
+                "7cdc406c77206d62"
+            ]
+        ]
+    },
+    {
+        "id": "7cdc406c77206d62",
+        "type": "debug",
+        "z": "e47eef669dc31ecb",
+        "name": "full msg",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "fa4b0d84e9d34345",
+        "type": "comment",
+        "z": "e47eef669dc31ecb",
+        "name": "Debug",
+        "info": "",
+        "x": 990,
+        "y": 260,
         "wires": []
     },
     {
@@ -1311,7 +1557,7 @@
         "id": "b7dfca507abe7e8c",
         "type": "function",
         "z": "85d487e8aceafc96",
-        "name": "ex. payload",
+        "name": "ej. payload",
         "func": "msg.payload = \"Hola Arduino!\\n\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
@@ -1322,7 +1568,8 @@
         "y": 340,
         "wires": [
             [
-                "ae95c16c123ae6ac"
+                "ae95c16c123ae6ac",
+                "e0a7ccd060e29a2e"
             ]
         ]
     },
@@ -1373,7 +1620,7 @@
         "id": "fd64d88e14571105",
         "type": "debug",
         "z": "85d487e8aceafc96",
-        "name": "input COM",
+        "name": "in from USB",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -1384,6 +1631,23 @@
         "statusType": "auto",
         "x": 490,
         "y": 440,
+        "wires": []
+    },
+    {
+        "id": "e0a7ccd060e29a2e",
+        "type": "debug",
+        "z": "85d487e8aceafc96",
+        "name": "out to USB",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 380,
         "wires": []
     },
     {
