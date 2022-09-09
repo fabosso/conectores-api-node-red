@@ -624,7 +624,7 @@
         "type": "function",
         "z": "7c3d3a46f80e9b7d",
         "name": "LoRa parser",
-        "func": "const { validLoraKeys, sensorica } = global.get(\"sigefaAPI\");\n\nconst loraPayload = msg.payload.substring(msg.payload.indexOf(\":\") + 1);\nlet loraData = {};\n\nloraPayload.split(\" \").forEach(str => {\n    if (str.length > 0) {\n        const arr = str.replace(\",\", \"\").split(\"=\");\n        if (!validLoraKeys.includes(arr[0])) {\n            throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n        }\n        if (arr[0] in sensorica) {\n            loraData = {\n                ...loraData,\n                [arr[0]]: arr[1]\n            };\n        }\n        if (arr[0] === \"emergency\") {\n            loraData = {\n                ...loraData,\n                emergency: arr[1]\n            }\n        } \n    }\n\n});\n\n\nmsg.payload = loraData;\n\n\nreturn msg;",
+        "func": "const { validLoraKeys, sensorica } = global.get(\"sigefaAPI\");\n\nconst loraPayload = msg.payload.substring(msg.payload.indexOf(\":\") + 1);\nlet loraData = {};\n\nloraPayload.replace(/(\\r\\n|\\n|\\r)/gm, \"\").split(\" \").forEach(str => {\n    if (str.length > 0) {\n        const arr = str.replace(\",\", \"\").split(\"=\");\n        if (!validLoraKeys.includes(arr[0])) {\n            throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n        }\n        if (arr[0] in sensorica) {\n            loraData = {\n                ...loraData,\n                [arr[0]]: arr[1]\n            };\n        }\n        if (arr[0] === \"emergency\") {\n            loraData = {\n                ...loraData,\n                emergency: arr[1]\n            }\n        } \n    }\n\n});\n\n\nmsg.payload = loraData;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -634,8 +634,7 @@
         "y": 80,
         "wires": [
             [
-                "cc3177255813ca6f",
-                "f2369b3a41ab9e19"
+                "cc3177255813ca6f"
             ]
         ]
     },
@@ -699,22 +698,6 @@
         ]
     },
     {
-        "id": "f2369b3a41ab9e19",
-        "type": "debug",
-        "z": "7c3d3a46f80e9b7d",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 380,
-        "y": 160,
-        "wires": []
-    },
-    {
         "id": "6fc9e2f7239c078d",
         "type": "function",
         "z": "bda60c0bd3eca39a",
@@ -761,7 +744,7 @@
         "type": "function",
         "z": "bda60c0bd3eca39a",
         "name": "watcher",
-        "func": "let sigefaAPI = global.get(\"sigefaAPI\");\n\nconst status = msg.payload.status;\nif (![\"F\", \"S\", \"L\"].includes(status)) {\n    throw new Error (\"status desconocido: \" + status);\n}\n\nif (!sigefaAPI.status || status !== sigefaAPI.status) {\n    msg.payload = `USB: status=${status}`;\n    sigefaAPI = {\n        ...sigefaAPI,\n        status\n    }\n    global.set(\"sigefaAPI\", sigefaAPI);\n    return msg;\n}\n\nreturn;\n",
+        "func": "let sigefaAPI = global.get(\"sigefaAPI\");\n\nconst status = msg.payload.status;\nif (![\"F\", \"S\", \"L\"].includes(status)) {\n    throw new Error (\"status desconocido: \" + status);\n}\n\nif (sigefaAPI.firstRun || !sigefaAPI.status || status !== sigefaAPI.status) {\n    msg.payload = `USB: status=${status}\\n`;\n    sigefaAPI = {\n        ...sigefaAPI,\n        firstRun: false,\n        status\n    }\n    global.set(\"sigefaAPI\", sigefaAPI);\n    return msg;\n}\n\nreturn;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -843,7 +826,7 @@
         "type": "debug",
         "z": "4f13ca8d684be14d",
         "name": "headers debug",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -993,7 +976,7 @@
         "type": "debug",
         "z": "4f13ca8d684be14d",
         "name": "http response",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1077,7 +1060,7 @@
         "type": "debug",
         "z": "4f13ca8d684be14d",
         "name": "init debug",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1221,6 +1204,7 @@
         "id": "9444b007af009c8b",
         "type": "function",
         "z": "e47eef669dc31ecb",
+        "d": true,
         "name": "randomize serial payload",
         "func": "const loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5 ? 1 : 0;\nconst trunc = (str) => parseFloat(str.charAt(0))\n\nconst generarPayloadNodo = () => `USB: voltage=${rng(210, 230)}, temperature=${rng(5, 30)}, emergency=${rngB()}, current=${rng(0.5, 10)}, gas=${rng(0, fuelLimit)}`;\n\nmsg.payload = generarPayloadNodo();\n\n\nreturn msg;",
         "outputs": 1,
@@ -1270,7 +1254,7 @@
         "type": "function",
         "z": "e47eef669dc31ecb",
         "name": "save constants",
-        "func": "let sigefaAPI = global.get(\"sigefaAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"emergency\"]\nconst sensorica = {\n    voltage: \"1\",\n    current: \"2\",\n    gas: \"3\",\n    temperature: \"6\"\n};\nconst traduccion = {\n    voltage: \"Tensión (V)\",\n    current: \"Corriente (A)\",\n    gas: \"Combustible (L)\",\n    temperature: \"Temperatura (°C)\"\n}\nconst facilidadId = 3;\nconst baseUrl = \"http://127.0.0.1:8000\";\n\nmsg.payload = {\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl\n}\n\nsigefaAPI = {\n    ...sigefaAPI,\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl\n}\nglobal.set(\"sigefaAPI\", sigefaAPI)\n\nreturn msg;",
+        "func": "let sigefaAPI = global.get(\"sigefaAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"emergency\"]\nconst sensorica = {\n    voltage: \"1\",\n    current: \"2\",\n    gas: \"3\",\n    temperature: \"6\"\n};\nconst traduccion = {\n    voltage: \"Tensión (V)\",\n    current: \"Corriente (A)\",\n    gas: \"Combustible (L)\",\n    temperature: \"Temperatura (°C)\"\n}\nconst facilidadId = 3;\nconst baseUrl = \"http://127.0.0.1:8000\";\n\nmsg.payload = {\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl\n}\n\nsigefaAPI = {\n    ...sigefaAPI,\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl,\n    firstRun: true\n}\nglobal.set(\"sigefaAPI\", sigefaAPI)\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1322,7 +1306,6 @@
         "id": "2c33f7aa8be0eeb7",
         "type": "inject",
         "z": "e47eef669dc31ecb",
-        "d": true,
         "name": "loop",
         "props": [
             {
@@ -1333,7 +1316,7 @@
                 "vt": "str"
             }
         ],
-        "repeat": "30",
+        "repeat": "10",
         "crontab": "",
         "once": true,
         "onceDelay": "5",
@@ -1352,6 +1335,7 @@
         "id": "6cda1c66e24f681e",
         "type": "inject",
         "z": "e47eef669dc31ecb",
+        "d": true,
         "name": "",
         "props": [
             {
@@ -1485,19 +1469,6 @@
         "wires": []
     },
     {
-        "id": "d1c3ee5444b18632",
-        "type": "subflow:bda60c0bd3eca39a",
-        "z": "e47eef669dc31ecb",
-        "name": "",
-        "x": 370,
-        "y": 540,
-        "wires": [
-            [
-                "626abc06e299e324"
-            ]
-        ]
-    },
-    {
         "id": "512185a09984d94d",
         "type": "catch",
         "z": "e47eef669dc31ecb",
@@ -1540,6 +1511,44 @@
         "info": "",
         "x": 990,
         "y": 260,
+        "wires": []
+    },
+    {
+        "id": "d1c3ee5444b18632",
+        "type": "subflow:bda60c0bd3eca39a",
+        "z": "e47eef669dc31ecb",
+        "name": "",
+        "x": 370,
+        "y": 540,
+        "wires": [
+            [
+                "626abc06e299e324",
+                "1ba461398996f71d"
+            ]
+        ]
+    },
+    {
+        "id": "45fb2f4db430c6c3",
+        "type": "serial in",
+        "z": "e47eef669dc31ecb",
+        "name": "",
+        "serial": "497cf184cd8a8026",
+        "x": 1070,
+        "y": 180,
+        "wires": [
+            [
+                "143b7c72faa51ff3"
+            ]
+        ]
+    },
+    {
+        "id": "1ba461398996f71d",
+        "type": "serial out",
+        "z": "e47eef669dc31ecb",
+        "name": "",
+        "serial": "497cf184cd8a8026",
+        "x": 590,
+        "y": 600,
         "wires": []
     },
     {
