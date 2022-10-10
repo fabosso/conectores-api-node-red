@@ -2,40 +2,8 @@
     {
         "id": "4f13ca8d684be14d",
         "type": "tab",
-        "label": "conector API horus",
+        "label": "Conector a API Horus",
         "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "e47eef669dc31ecb",
-        "type": "tab",
-        "label": "conector API sigefa",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "85d487e8aceafc96",
-        "type": "tab",
-        "label": "tests - serial comms",
-        "disabled": true,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "5f0d43a9dc0a4da7",
-        "type": "tab",
-        "label": "tests - MQTT comms",
-        "disabled": true,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "3540c13fef4eaf3c",
-        "type": "tab",
-        "label": "tests - Horus HTTP requests",
-        "disabled": true,
         "info": "",
         "env": []
     },
@@ -219,25 +187,6 @@
         "color": "#DDAA99"
     },
     {
-        "id": "497cf184cd8a8026",
-        "type": "serial-port",
-        "serialport": "COM5",
-        "serialbaud": "9600",
-        "databits": "8",
-        "parity": "none",
-        "stopbits": "1",
-        "waitfor": "",
-        "dtr": "none",
-        "rts": "none",
-        "cts": "none",
-        "dsr": "none",
-        "newline": "\\n",
-        "bin": "false",
-        "out": "char",
-        "addchar": "",
-        "responsetimeout": "10000"
-    },
-    {
         "id": "82b1f593c0d9937c",
         "type": "mqtt-broker",
         "name": "",
@@ -263,6 +212,25 @@
         "willMsg": {},
         "userProps": "",
         "sessionExpiry": ""
+    },
+    {
+        "id": "2c9e26433f2a92f0",
+        "type": "ui_tab",
+        "name": "Conector Horus NRUI",
+        "icon": "fa-eye",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "56160cc0ad9f5e14",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "2c9e26433f2a92f0",
+        "order": 1,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
     },
     {
         "id": "708ca09a7db425b7",
@@ -587,7 +555,7 @@
         "type": "function",
         "z": "205a3dbe388d752f",
         "name": "LoRa parser",
-        "func": "const diccionario = global.get(\"horusAPI\").diccionario;\nconst traduccionEstados = {\n    S: \"en servicio\",\n    L: \"servicio limitado\",\n    F: \"fuera de servicio\"\n}\n\nconst requests = [];\n\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\nconst estado = traduccionEstados[msg.payload.loraData.status] || \"fuera de servicio\"\n\nif (!msg.payload.loraData.nro_mm) {\n    const nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\n    const capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\n    requests.push({\n        endpoint: \"nivel-combus\",\n        type: \"metrica\",\n        body: {\n            generador,\n            nivel,\n            capacidad,\n            timestamp\n        }\n    });\n\n    requests.push({\n        endpoint: \"alimentacion\",\n        type: \"metrica\",\n        body: {\n            generador,\n            tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n            corriente: parseFloat(msg.payload.loraData.current) || 1.0,\n            timestamp\n        }\n    });\n\n    requests.push({\n        endpoint: \"geolocalizacion\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            latitude: parseFloat(msg.payload.loraData.lat) || 0.0,\n            longitude: parseFloat(msg.payload.loraData.lng) || 0.0,\n            altitude: parseFloat(msg.payload.loraData.alt) || 0.0,\n            timestamp,\n        }\n    })\n\n    requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"rain\",\n            valor: msg.payload.loraData.raindrops === \"1\",\n            timestamp\n        }\n    });\n\n    requests.push({\n        endpoint: \"estado-servicio\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            estado,\n            timestamp\n        }\n    });\n\n    requests.push({\n        endpoint: \"temperatura\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            temperature: parseFloat(msg.payload.loraData.temperature) || 0.0,\n            timestamp\n        }\n    });\n} else {\n\n    const nro_mm = msg.payload.loraData.nro_mm;\n    const clasificacion = diccionario.clasificaciones[msg.payload.loraData.clasificacion];\n    const precedencia = diccionario.precedencias[msg.payload.loraData.precedencia];\n    const cifrado = msg.payload.loraData.cifrado === 1;\n    const destino = diccionario.redes[msg.payload.loraData.destino];\n    const origen = diccionario.redes[msg.payload.loraData.origen];\n    const evento = diccionario.eventos[msg.payload.loraData.evento];\n\n    requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm,\n            clasificacion,\n            precedencia,\n            cifrado,\n            destino,\n            origen,\n            evento,\n            timestamp\n        }\n    })\n}\n\nmsg.payload = requests;\nreturn msg;",
+        "func": "const diccionario = global.get(\"horusAPI\").diccionario;\nconst traduccionEstados = {\n    S: \"en servicio\",\n    L: \"servicio limitado\",\n    F: \"fuera de servicio\"\n}\n\nconst requests = [];\n\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\nconst estado = traduccionEstados[msg.payload.loraData.status] || \"fuera de servicio\"\n\nif (!msg.payload.loraData.nro_mm) {\n    requests.push({\n        endpoint: \"estado-servicio\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            estado,\n            timestamp\n        }\n    });\n\n    if (msg.payload.loraData.voltage || msg.payload.loraData.current) {\n        requests.push({\n            endpoint: \"alimentacion\",\n            type: \"metrica\",\n            body: {\n                generador,\n                tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n                corriente: parseFloat(msg.payload.loraData.current) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.temperature) {\n        requests.push({\n            endpoint: \"temperatura\",\n            type: \"evento\",\n            body: {\n                facilidad,\n                temperature: parseFloat(msg.payload.loraData.temperature) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.gas) {\n        const nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\n        const capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\n        requests.push({\n            endpoint: \"nivel-combus\",\n            type: \"metrica\",\n            body: {\n                generador,\n                nivel,\n                capacidad,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.lat && msg.payload.loraData.lat !== \"***\") {\n        requests.push({\n            endpoint: \"geolocalizacion\",\n            type: \"evento\",\n            body: {\n                facilidad,\n                latitude: parseFloat(msg.payload.loraData.lat) || 0.0,\n                longitude: parseFloat(msg.payload.loraData.lng) || 0.0,\n                altitude: parseFloat(msg.payload.loraData.alt) || 0.0,\n                timestamp,\n            }\n        });\n    }\n\n    requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"rain\",\n            valor: msg.payload.loraData.raindrops === \"1\",\n            timestamp\n        }\n    });\n} else {\n\n    const nro_mm = msg.payload.loraData.nro_mm;\n    const clasificacion = diccionario.clasificaciones[msg.payload.loraData.clasificacion];\n    const precedencia = diccionario.precedencias[msg.payload.loraData.precedencia];\n    const cifrado = msg.payload.loraData.cifrado === 1;\n    const destino = diccionario.redes[msg.payload.loraData.destino];\n    const origen = diccionario.redes[msg.payload.loraData.origen];\n    const evento = diccionario.eventos[msg.payload.loraData.evento];\n\n    requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm,\n            clasificacion,\n            precedencia,\n            cifrado,\n            destino,\n            origen,\n            evento,\n            timestamp\n        }\n    })\n}\n\nmsg.payload = requests;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1177,535 +1145,12 @@
         "wires": []
     },
     {
-        "id": "2332b5fe09d16da5",
-        "type": "inject",
-        "z": "e47eef669dc31ecb",
-        "name": "nodo interior",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "nodo interior",
-        "payloadType": "str",
-        "x": 830,
-        "y": 120,
-        "wires": [
-            [
-                "9444b007af009c8b"
-            ]
-        ]
-    },
-    {
-        "id": "9444b007af009c8b",
-        "type": "function",
-        "z": "e47eef669dc31ecb",
-        "d": true,
-        "name": "randomize serial payload",
-        "func": "const loraId = 10009;\nconst fuelLimit = 150;\n\nconst rng = (min, max) => (Math.random() * (max - min + 1) + min).toFixed(2);\nconst rngB = () => Math.random() > 0.5 ? 1 : 0;\nconst trunc = (str) => parseFloat(str.charAt(0))\n\nconst generarPayloadNodo = () => `USB: voltage=${rng(210, 230)}, temperature=${rng(5, 30)}, emergency=${rngB()}, current=${rng(0.5, 10)}, gas=${rng(0, fuelLimit)}`;\n\nmsg.payload = generarPayloadNodo();\n\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1070,
-        "y": 120,
-        "wires": [
-            [
-                "143b7c72faa51ff3"
-            ]
-        ]
-    },
-    {
-        "id": "5c65cc759ddb069d",
-        "type": "inject",
-        "z": "e47eef669dc31ecb",
-        "name": ".1 sec",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": "0.1",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 190,
-        "y": 120,
-        "wires": [
-            [
-                "081612d7abc59ea5"
-            ]
-        ]
-    },
-    {
-        "id": "081612d7abc59ea5",
-        "type": "function",
-        "z": "e47eef669dc31ecb",
-        "name": "save constants",
-        "func": "let sigefaAPI = global.get(\"sigefaAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"emergency\"]\nconst sensorica = {\n    voltage: \"1\",\n    current: \"2\",\n    gas: \"3\",\n    temperature: \"6\"\n};\nconst traduccion = {\n    voltage: \"Tensión (V)\",\n    current: \"Corriente (A)\",\n    gas: \"Combustible (L)\",\n    temperature: \"Temperatura (°C)\"\n}\nconst facilidadId = 3;\nconst baseUrl = \"http://127.0.0.1:8000\";\n\nmsg.payload = {\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl\n}\n\nsigefaAPI = {\n    ...sigefaAPI,\n    validLoraKeys,\n    sensorica,\n    traduccion,\n    facilidadId,\n    baseUrl,\n    firstRun: true\n}\nglobal.set(\"sigefaAPI\", sigefaAPI)\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 120,
-        "wires": [
-            [
-                "b69c26f5cc367e05"
-            ]
-        ]
-    },
-    {
-        "id": "b69c26f5cc367e05",
-        "type": "debug",
-        "z": "e47eef669dc31ecb",
-        "name": "init debug",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 540,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "70ca2861ec2326f4",
-        "type": "debug",
-        "z": "e47eef669dc31ecb",
-        "name": "http response",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 620,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "2c33f7aa8be0eeb7",
-        "type": "inject",
-        "z": "e47eef669dc31ecb",
-        "name": "loop",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "1",
-        "crontab": "",
-        "once": true,
-        "onceDelay": "5",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 130,
-        "y": 540,
-        "wires": [
-            [
-                "d1c3ee5444b18632"
-            ]
-        ]
-    },
-    {
-        "id": "6cda1c66e24f681e",
-        "type": "inject",
-        "z": "e47eef669dc31ecb",
-        "d": true,
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 120,
-        "y": 620,
-        "wires": [
-            [
-                "d1c3ee5444b18632"
-            ]
-        ]
-    },
-    {
-        "id": "626abc06e299e324",
-        "type": "debug",
-        "z": "e47eef669dc31ecb",
-        "name": "serial payload",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 620,
-        "y": 540,
-        "wires": []
-    },
-    {
-        "id": "143b7c72faa51ff3",
-        "type": "link out",
-        "z": "e47eef669dc31ecb",
-        "name": "serial payload out",
-        "mode": "link",
-        "links": [
-            "9712c92fc29c0f3d"
-        ],
-        "x": 1235,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "9712c92fc29c0f3d",
-        "type": "link in",
-        "z": "e47eef669dc31ecb",
-        "name": "serial payload in",
-        "links": [
-            "143b7c72faa51ff3"
-        ],
-        "x": 155,
-        "y": 380,
-        "wires": [
-            [
-                "b2db8885f0a8ca49",
-                "0ab33ef8e0e83f55"
-            ]
-        ]
-    },
-    {
-        "id": "ac436177d0aca753",
-        "type": "comment",
-        "z": "e47eef669dc31ecb",
-        "name": "Configuración inicial",
-        "info": "",
-        "x": 350,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "b2db8885f0a8ca49",
-        "type": "subflow:7c3d3a46f80e9b7d",
-        "z": "e47eef669dc31ecb",
-        "name": "",
-        "x": 370,
-        "y": 420,
-        "wires": [
-            [
-                "70ca2861ec2326f4"
-            ]
-        ]
-    },
-    {
-        "id": "0ab33ef8e0e83f55",
-        "type": "debug",
-        "z": "e47eef669dc31ecb",
-        "name": "serial input",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 310,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "e147db9a3f48c77c",
-        "type": "comment",
-        "z": "e47eef669dc31ecb",
-        "name": "Simulador payload entrante",
-        "info": "",
-        "x": 1040,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "f6e01edc9908e90c",
-        "type": "comment",
-        "z": "e47eef669dc31ecb",
-        "name": "Conector API",
-        "info": "",
-        "x": 350,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "512185a09984d94d",
-        "type": "catch",
-        "z": "e47eef669dc31ecb",
-        "name": "http error",
-        "scope": [
-            "d1c3ee5444b18632",
-            "b2db8885f0a8ca49"
-        ],
-        "uncaught": false,
-        "x": 900,
-        "y": 320,
-        "wires": [
-            [
-                "7cdc406c77206d62"
-            ]
-        ]
-    },
-    {
-        "id": "7cdc406c77206d62",
-        "type": "debug",
-        "z": "e47eef669dc31ecb",
-        "name": "full msg",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1060,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "fa4b0d84e9d34345",
-        "type": "comment",
-        "z": "e47eef669dc31ecb",
-        "name": "Debug",
-        "info": "",
-        "x": 990,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "d1c3ee5444b18632",
-        "type": "subflow:bda60c0bd3eca39a",
-        "z": "e47eef669dc31ecb",
-        "name": "",
-        "x": 370,
-        "y": 540,
-        "wires": [
-            [
-                "626abc06e299e324",
-                "1ba461398996f71d"
-            ]
-        ]
-    },
-    {
-        "id": "45fb2f4db430c6c3",
-        "type": "serial in",
-        "z": "e47eef669dc31ecb",
-        "name": "",
-        "serial": "497cf184cd8a8026",
-        "x": 1070,
-        "y": 180,
-        "wires": [
-            [
-                "143b7c72faa51ff3"
-            ]
-        ]
-    },
-    {
-        "id": "1ba461398996f71d",
-        "type": "serial out",
-        "z": "e47eef669dc31ecb",
-        "name": "",
-        "serial": "497cf184cd8a8026",
-        "x": 590,
-        "y": 600,
-        "wires": []
-    },
-    {
-        "id": "ae95c16c123ae6ac",
-        "type": "serial out",
-        "z": "85d487e8aceafc96",
-        "name": "",
-        "serial": "497cf184cd8a8026",
-        "x": 470,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "b7dfca507abe7e8c",
-        "type": "function",
-        "z": "85d487e8aceafc96",
-        "name": "ej. payload",
-        "func": "msg.payload = \"Hola Arduino!\\n\";\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 310,
-        "y": 340,
-        "wires": [
-            [
-                "ae95c16c123ae6ac",
-                "e0a7ccd060e29a2e"
-            ]
-        ]
-    },
-    {
-        "id": "f920a62b231f0d72",
-        "type": "inject",
-        "z": "85d487e8aceafc96",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "1",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 140,
-        "y": 340,
-        "wires": [
-            [
-                "b7dfca507abe7e8c"
-            ]
-        ]
-    },
-    {
-        "id": "6f58a3fb5a9ff766",
-        "type": "serial in",
-        "z": "85d487e8aceafc96",
-        "name": "",
-        "serial": "497cf184cd8a8026",
-        "x": 330,
-        "y": 440,
-        "wires": [
-            [
-                "fd64d88e14571105"
-            ]
-        ]
-    },
-    {
-        "id": "fd64d88e14571105",
-        "type": "debug",
-        "z": "85d487e8aceafc96",
-        "name": "in from USB",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 490,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "e0a7ccd060e29a2e",
-        "type": "debug",
-        "z": "85d487e8aceafc96",
-        "name": "out to USB",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 490,
-        "y": 380,
-        "wires": []
-    },
-    {
-        "id": "ab6dca086050ae89",
-        "type": "mqtt in",
-        "z": "5f0d43a9dc0a4da7",
-        "d": true,
-        "name": "",
-        "topic": "",
-        "qos": "0",
-        "datatype": "auto-detect",
-        "broker": "82b1f593c0d9937c",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 1,
-        "x": 170,
-        "y": 480,
-        "wires": [
-            [
-                "c3b685d88a6586e5"
-            ]
-        ]
-    },
-    {
-        "id": "c3b685d88a6586e5",
-        "type": "debug",
-        "z": "5f0d43a9dc0a4da7",
-        "d": true,
-        "name": "mqtt messages",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 360,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "a6de8aa0198fe1bf",
+        "id": "9c58eaa9606a813a",
         "type": "mqtt out",
-        "z": "5f0d43a9dc0a4da7",
+        "z": "4f13ca8d684be14d",
         "name": "",
-        "topic": "lora-ccic/",
-        "qos": "",
+        "topic": "lora-ccic/uplink",
+        "qos": "0",
         "retain": "",
         "respTopic": "",
         "contentType": "",
@@ -1713,215 +1158,45 @@
         "correl": "",
         "expiry": "",
         "broker": "82b1f593c0d9937c",
-        "x": 540,
-        "y": 320,
+        "x": 600,
+        "y": 760,
         "wires": []
     },
     {
-        "id": "91f64efa885abb14",
-        "type": "inject",
-        "z": "5f0d43a9dc0a4da7",
-        "name": "nodo interior",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "<10009>voltage=225.00&temperature=24.50",
-        "payloadType": "str",
-        "x": 210,
-        "y": 320,
-        "wires": [
-            [
-                "a6de8aa0198fe1bf"
-            ]
-        ]
+        "id": "bfe5605cf3661275",
+        "type": "comment",
+        "z": "4f13ca8d684be14d",
+        "name": "Uplink LoRa",
+        "info": "",
+        "x": 370,
+        "y": 560,
+        "wires": []
     },
     {
-        "id": "6a49ce7f08f0dbca",
-        "type": "inject",
-        "z": "5f0d43a9dc0a4da7",
-        "name": "nodo exterior",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "<20009>current=0.65&raindrops=1&gas=123.51/150&lat=-34.57475&lng=58.43552&alt=15",
-        "payloadType": "str",
-        "x": 210,
-        "y": 380,
-        "wires": [
-            [
-                "a6de8aa0198fe1bf"
-            ]
-        ]
-    },
-    {
-        "id": "59e3ce42801f6b8d",
-        "type": "inject",
-        "z": "3540c13fef4eaf3c",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "estado-servicio",
-        "payloadType": "str",
-        "x": 160,
-        "y": 200,
-        "wires": [
-            [
-                "1a14ebb7ae9ed212"
-            ]
-        ]
-    },
-    {
-        "id": "1a14ebb7ae9ed212",
+        "id": "4138f62c81ccba5c",
         "type": "function",
-        "z": "3540c13fef4eaf3c",
-        "name": "metrics insert",
-        "func": "const {config, headers} = global.get(\"horusAPI\");\nconst endpoint = msg.payload;\nconst swaggerDataExamples = {\n    \"estado-servicio\": {\n        facilidad: \"ECR Cdo\",\n        estado: \"en servicio\"\n    },\n    \"longitud-cola\": {\n        facilidad: \"ECR Cdo\",\n        long_cola: 5,\n    },\n    \"nivel-combus\": {\n        generador: \"generador 1\",\n        nivel: 5.4,\n        capacidad: 10\n    },\n    \"alimentacion\": {\n        generador: \"generador 1\",\n        tension: 223.6,\n        corriente: 10.0\n    }\n};\n\nmsg.payload = JSON.stringify({\n    ...swaggerDataExamples[msg.payload],\n    timestamp: parseInt(new Date().getTime() / 1000)\n});\nmsg.url = config.url_metricas + endpoint;\n\nmsg.headers = headers;\nreturn msg;",
+        "z": "4f13ca8d684be14d",
+        "name": "uplinkify",
+        "func": "const loRaId = global.get(\"horusAPI\").uiLoRaId;\nconst automaticMode = global.get(\"horusAPI\").uiAutomaticMode;\nlet loRaCmd = \"\";\n\nconst checkDayTime = () => {\n    const horaDiurna = 7;\n    const horaNocturna = 19;\n    const horaActual = new Date().getHours();\n    return horaActual >= horaDiurna && horaActual < horaNocturna;\n}\n\nif (msg.payload == \"start alert\") {\n    loRaCmd = \"startAlert\";\n} else {\n    if (automaticMode) {\n        if (msg.payload == \"auto loop\") {\n            if (checkDayTime()) {\n                loRaCmd = \"daytime\";\n            } else {\n                loRaCmd = \"nighttime\";\n            }\n        }\n    } else {\n        if (msg.payload == \"manual day time\") {\n            loRaCmd = \"daytime\";\n        } else if (msg.payload == \"manual night time\") {\n            loRaCmd = \"nighttime\";\n        } \n    }\n}\n\nif (loRaCmd) {\n    msg.payload = `<${loRaId}>${loRaCmd}`;\n    return msg;\n} \n\nreturn;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
-        "y": 200,
+        "x": 380,
+        "y": 760,
         "wires": [
             [
-                "970a76e286d4227c"
+                "9c58eaa9606a813a",
+                "8487bcedf1ca350b"
             ]
         ]
     },
     {
-        "id": "1958109be324e66d",
-        "type": "inject",
-        "z": "3540c13fef4eaf3c",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "longitud-cola",
-        "payloadType": "str",
-        "x": 150,
-        "y": 240,
-        "wires": [
-            [
-                "1a14ebb7ae9ed212"
-            ]
-        ]
-    },
-    {
-        "id": "561bc044cec631a7",
-        "type": "inject",
-        "z": "3540c13fef4eaf3c",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "nivel-combus",
-        "payloadType": "str",
-        "x": 150,
-        "y": 280,
-        "wires": [
-            [
-                "1a14ebb7ae9ed212"
-            ]
-        ]
-    },
-    {
-        "id": "c9deb913baff3738",
-        "type": "inject",
-        "z": "3540c13fef4eaf3c",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "alimentacion",
-        "payloadType": "str",
-        "x": 150,
-        "y": 320,
-        "wires": [
-            [
-                "1a14ebb7ae9ed212"
-            ]
-        ]
-    },
-    {
-        "id": "6f825c20a5f8abf5",
-        "type": "http request",
-        "z": "3540c13fef4eaf3c",
-        "name": "post http ok",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 570,
-        "y": 200,
-        "wires": [
-            [
-                "a1daa3ac156f9010"
-            ]
-        ]
-    },
-    {
-        "id": "a1daa3ac156f9010",
+        "id": "8487bcedf1ca350b",
         "type": "debug",
-        "z": "3540c13fef4eaf3c",
-        "name": "payload",
+        "z": "4f13ca8d684be14d",
+        "name": "uplink LoRa",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -1930,236 +1205,237 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 840,
-        "y": 200,
+        "x": 590,
+        "y": 840,
         "wires": []
     },
     {
-        "id": "7bba23b06978044a",
+        "id": "f188432b4508e72e",
+        "type": "ui_numeric",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "label": "LoRa ID",
+        "tooltip": "Identificador LoRa",
+        "group": "56160cc0ad9f5e14",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "wrap": true,
+        "passthru": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": "10000",
+        "max": "29999",
+        "step": 1,
+        "className": "",
+        "x": 340,
+        "y": 640,
+        "wires": [
+            [
+                "a626cdbb7f2557bb"
+            ]
+        ]
+    },
+    {
+        "id": "a626cdbb7f2557bb",
         "type": "function",
-        "z": "3540c13fef4eaf3c",
-        "name": "events insert",
-        "func": "const config = global.get(\"config\");\nconst headers = global.get(\"headers\");\nconst endpoint = msg.payload === \"mens-mil\" ? \"mens-mil\" : \"sensor_bool\";\nconst swaggerDataExamples = {\n    \"mens-mil\": {\n        nro_mm: 2,\n        clasificacion: \"reservado\",\n        precedencia: \"rutina\",\n        cifrado: true,\n        destino: \"Puesto Comando\",\n        origen: \"Centro de Mensajes\",\n        evento: \"entregar\",\n    },\n    \"rain-sensor\": {\n        facilidad: \"generador 1\",\n        evento: \"rain\",\n        valor: true\n    },\n    \"presence-sensor\" : {\n        facilidad: \"generador 1\",\n        evento: \"presence\",\n        valor: true\n    }\n};\n\nmsg.payload = JSON.stringify({\n    ...swaggerDataExamples[msg.payload],\n    timestamp: parseInt(new Date().getTime() / 1000)\n});\nmsg.url = config.url_eventos + endpoint;\n\nmsg.headers = headers;\nreturn msg;",
-        "outputs": 1,
+        "z": "4f13ca8d684be14d",
+        "name": "save uiLoRaId",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nhorusAPI = {\n    ...horusAPI,\n    uiLoRaId: msg.payload\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
-        "y": 380,
-        "wires": [
-            [
-                "970a76e286d4227c"
-            ]
-        ]
+        "x": 540,
+        "y": 640,
+        "wires": []
     },
     {
-        "id": "ad83ac8858114762",
+        "id": "2884fd854ddf3110",
         "type": "inject",
-        "z": "3540c13fef4eaf3c",
+        "z": "4f13ca8d684be14d",
         "name": "",
         "props": [
             {
                 "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "mens-mil",
-        "payloadType": "str",
-        "x": 140,
-        "y": 380,
-        "wires": [
-            [
-                "7bba23b06978044a"
-            ]
-        ]
-    },
-    {
-        "id": "4c48b7f4287b12e9",
-        "type": "inject",
-        "z": "3540c13fef4eaf3c",
-        "name": "",
-        "props": [
+            },
             {
-                "p": "payload"
+                "p": "topic",
+                "vt": "str"
             }
         ],
         "repeat": "",
         "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
+        "once": true,
+        "onceDelay": "0.3",
         "topic": "",
-        "payload": "rain-sensor",
-        "payloadType": "str",
-        "x": 140,
-        "y": 460,
+        "payload": "10009",
+        "payloadType": "num",
+        "x": 170,
+        "y": 640,
         "wires": [
             [
-                "7bba23b06978044a"
+                "f188432b4508e72e"
             ]
         ]
     },
     {
-        "id": "578b66f2c692bbd3",
-        "type": "inject",
-        "z": "3540c13fef4eaf3c",
+        "id": "d9134c42a08adf7a",
+        "type": "ui_button",
+        "z": "4f13ca8d684be14d",
         "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "presence-sensor",
+        "group": "56160cc0ad9f5e14",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Iniciar alerta",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "notifications_none",
+        "payload": "start alert",
         "payloadType": "str",
-        "x": 160,
-        "y": 500,
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 190,
+        "y": 760,
         "wires": [
             [
-                "7bba23b06978044a"
+                "4138f62c81ccba5c"
             ]
         ]
     },
     {
-        "id": "970a76e286d4227c",
-        "type": "debug",
-        "z": "3540c13fef4eaf3c",
-        "name": "payload",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
+        "id": "233f65a95714c60c",
+        "type": "ui_switch",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "label": "Modo automático",
+        "tooltip": "Si está activado, pone al nodo en modo día o noche basado en la hora actual del equipo.",
+        "group": "56160cc0ad9f5e14",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 210,
+        "y": 700,
+        "wires": [
+            [
+                "b9f2f313fb2647bb"
+            ]
+        ]
+    },
+    {
+        "id": "b9f2f313fb2647bb",
+        "type": "function",
+        "z": "4f13ca8d684be14d",
+        "name": "save uiAutomaticMode",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nhorusAPI = {\n    ...horusAPI,\n    uiAutomaticMode: msg.payload\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
         "x": 560,
-        "y": 380,
+        "y": 700,
         "wires": []
     },
     {
-        "id": "9d9a119319899a47",
+        "id": "587c6f073c08342f",
         "type": "inject",
-        "z": "3540c13fef4eaf3c",
-        "name": ".2 sec",
+        "z": "4f13ca8d684be14d",
+        "name": "",
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "3600",
         "crontab": "",
         "once": true,
-        "onceDelay": "0.2",
+        "onceDelay": "0.5",
         "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 130,
-        "y": 120,
+        "payload": "auto loop",
+        "payloadType": "str",
+        "x": 190,
+        "y": 820,
         "wires": [
             [
-                "4e544585afc06766"
+                "4138f62c81ccba5c"
             ]
         ]
     },
     {
-        "id": "649225654eb18410",
-        "type": "debug",
-        "z": "3540c13fef4eaf3c",
-        "name": "headers debug",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 520,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "14235cd51943ab1d",
-        "type": "subflow:5842f7d28b260c86",
-        "z": "3540c13fef4eaf3c",
+        "id": "422bb83d8eed12c6",
+        "type": "ui_button",
+        "z": "4f13ca8d684be14d",
         "name": "",
-        "x": 280,
-        "y": 60,
+        "group": "56160cc0ad9f5e14",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Forzar día",
+        "tooltip": "Si no está en modo automático, pone al nodo en modo día.",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "brightness_7",
+        "payload": "manual day time",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 190,
+        "y": 880,
         "wires": [
             [
-                "d902bf32381ca26d"
+                "4138f62c81ccba5c"
             ]
         ]
     },
     {
-        "id": "6c04391d25226b10",
-        "type": "inject",
-        "z": "3540c13fef4eaf3c",
-        "name": ".1 sec",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": "0.1",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 130,
-        "y": 60,
-        "wires": [
-            [
-                "14235cd51943ab1d"
-            ]
-        ]
-    },
-    {
-        "id": "d902bf32381ca26d",
-        "type": "debug",
-        "z": "3540c13fef4eaf3c",
-        "name": "init debug",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 540,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "4e544585afc06766",
-        "type": "subflow:1e494c71e42901f0",
-        "z": "3540c13fef4eaf3c",
+        "id": "8a1ca87542f99fa8",
+        "type": "ui_button",
+        "z": "4f13ca8d684be14d",
         "name": "",
-        "x": 300,
-        "y": 120,
+        "group": "56160cc0ad9f5e14",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Forzar noche",
+        "tooltip": "Si no está en modo automático, pone al nodo en modo noche.",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "brightness_3",
+        "payload": "manual night time",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 190,
+        "y": 940,
         "wires": [
             [
-                "649225654eb18410"
+                "4138f62c81ccba5c"
             ]
         ]
     }

@@ -1,0 +1,1355 @@
+[
+    {
+        "id": "85d487e8aceafc96",
+        "type": "tab",
+        "label": "tests - serial comms",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5f0d43a9dc0a4da7",
+        "type": "tab",
+        "label": "tests - MQTT comms",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3540c13fef4eaf3c",
+        "type": "tab",
+        "label": "tests - Horus HTTP requests",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5842f7d28b260c86",
+        "type": "subflow",
+        "name": "Initialize",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 160,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "7ada066df377afec"
+                    },
+                    {
+                        "id": "b090a0b95690d0aa"
+                    },
+                    {
+                        "id": "83dfae9d90513fcc"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 920,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "81b82240936719f2",
+                        "port": 0
+                    },
+                    {
+                        "id": "708ca09a7db425b7",
+                        "port": 0
+                    },
+                    {
+                        "id": "83dfae9d90513fcc",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "1e494c71e42901f0",
+        "type": "subflow",
+        "name": "Token generator",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 160,
+                "wires": [
+                    {
+                        "id": "ce2dd4aff1337e2a"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1200,
+                "y": 160,
+                "wires": [
+                    {
+                        "id": "7e46875a3f07ad94",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "205a3dbe388d752f",
+        "type": "subflow",
+        "name": "MQTT to HorusAPI connector",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 40,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "b76708477da203e2"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 980,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "baf9389b5bf4a787",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "7c3d3a46f80e9b7d",
+        "type": "subflow",
+        "name": "Serial to SIGEFA API connector",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "15d67eb839f741f8"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 800,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "c59182bcf9ecdb64",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "bda60c0bd3eca39a",
+        "type": "subflow",
+        "name": "SIGEFA API to Serial connector",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "6fc9e2f7239c078d"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 680,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "2dda3e74810fe7c1",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "497cf184cd8a8026",
+        "type": "serial-port",
+        "serialport": "COM5",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "82b1f593c0d9937c",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "708ca09a7db425b7",
+        "type": "function",
+        "z": "5842f7d28b260c86",
+        "name": "save config",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nconst arr = msg.payload.split(\"\\n\").filter((/** @type {string | string[]} */ line) => line.includes(\"=\"));\nlet config = {};\narr.forEach((/** @type {string} */ item) => {\n    const lineArr = item.split(\"=\");\n    const key = lineArr[0].trim();\n    const value = lineArr[1].trim();\n    config = {\n        ...config,\n        [key]: value\n    }\n});\n\nhorusAPI = {\n    ...horusAPI,\n    config\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nmsg.payload = config;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b090a0b95690d0aa",
+        "type": "file in",
+        "z": "5842f7d28b260c86",
+        "name": "read config.ini",
+        "filename": ".node-red\\config.ini",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 380,
+        "y": 140,
+        "wires": [
+            [
+                "708ca09a7db425b7"
+            ]
+        ]
+    },
+    {
+        "id": "7ada066df377afec",
+        "type": "file in",
+        "z": "5842f7d28b260c86",
+        "name": "read facilities.json",
+        "filename": ".node-red\\facilities.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 390,
+        "y": 80,
+        "wires": [
+            [
+                "81b82240936719f2"
+            ]
+        ]
+    },
+    {
+        "id": "81b82240936719f2",
+        "type": "function",
+        "z": "5842f7d28b260c86",
+        "name": "save facilities",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nconst facilities = JSON.parse(msg.payload);\nhorusAPI = {\n    ...horusAPI,\n    facilities\n};\nglobal.set(\"horusAPI\", horusAPI);\n\nmsg.payload = facilities;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "83dfae9d90513fcc",
+        "type": "function",
+        "z": "5842f7d28b260c86",
+        "name": "save other constants",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"status\"]\nconst diccionario = {\n    clasificaciones: {\n        1: \"publico\",\n        2: \"reservado\",\n        3: \"confidencial\",\n        4: \"secreto\"\n    },\n    precedencias: {\n        1: \"rutina\",\n        2: \"prioridad\",\n        3: \"inmediato\",\n        4: \"flash\"\n    },\n    redes: {\n        1: \"Red Cdo Op\",\n        2: \"Red Mat Pers\",\n        3: \"Red Icia\",\n        4: \"Red Cdo\",\n        5: \"Red Op\"\n    },\n    eventos: {\n        1: \"generado\",\n        2: \"recibido_estafeta\",\n        3: \"entregado_estafeta\",\n        4: \"transmitido\"\n    }\n}\n\nhorusAPI = {\n    ...horusAPI,\n    validLoraKeys,\n    diccionario\n}\n\nglobal.set(\"horusAPI\", horusAPI);\n\nmsg.payload = {\n    validLoraKeys,\n    diccionario\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6295cfb665a849a5",
+        "type": "http request",
+        "z": "1e494c71e42901f0",
+        "name": "get http ok",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 160,
+        "wires": [
+            [
+                "9518aa1b3ce9198e"
+            ]
+        ]
+    },
+    {
+        "id": "ce2dd4aff1337e2a",
+        "type": "function",
+        "z": "1e494c71e42901f0",
+        "name": "list tokens",
+        "func": "\nconst { config } = global.get(\"horusAPI\");\n\nmsg.url = `${config.url_token}list?user=${config.grafana_user}&pass=${config.grafana_pass}`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 160,
+        "wires": [
+            [
+                "6295cfb665a849a5"
+            ]
+        ]
+    },
+    {
+        "id": "d8c2671168e219f1",
+        "type": "function",
+        "z": "1e494c71e42901f0",
+        "name": "generate token",
+        "func": "const { config } = global.get(\"horusAPI\");\n\nmsg.url = `${config.url_token}generate?user=${config.grafana_user}&pass=${config.grafana_pass}&device=simulador`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 80,
+        "wires": [
+            [
+                "fa0a88f356023ec6"
+            ]
+        ]
+    },
+    {
+        "id": "9518aa1b3ce9198e",
+        "type": "switch",
+        "z": "1e494c71e42901f0",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "empty"
+            },
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 530,
+        "y": 160,
+        "wires": [
+            [
+                "d8c2671168e219f1"
+            ],
+            [
+                "7e46875a3f07ad94"
+            ]
+        ]
+    },
+    {
+        "id": "fa0a88f356023ec6",
+        "type": "http request",
+        "z": "1e494c71e42901f0",
+        "name": "get http ok",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 910,
+        "y": 80,
+        "wires": [
+            [
+                "7e46875a3f07ad94"
+            ]
+        ]
+    },
+    {
+        "id": "7e46875a3f07ad94",
+        "type": "function",
+        "z": "1e494c71e42901f0",
+        "name": "save",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nconst token = msg.payload.simulador || msg.payload.token;\n\nif (token.length !== 32) {\n    throw new Error (\"token invalido Horus API\");\n}\n\nconst headers = {\n    Authorization: `Bearer ${token}`\n}\n\nhorusAPI = {\n    ...horusAPI,\n    headers\n};\nglobal.set(\"horusAPI\", horusAPI);\n\nmsg.payload = headers;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b76708477da203e2",
+        "type": "function",
+        "z": "205a3dbe388d752f",
+        "name": "facility search",
+        "func": "const isMM = typeof msg.payload !== \"string\";\nlet idFacility;\nlet header = \"\";\nlet horusAPI = global.get(\"horusAPI\") || {};\nif (isMM) {\n    const buffer = msg.payload.subarray(0, 7);\n    header = buffer.toString('utf-8');\n} else {\n    header = msg.payload.substring(0, 7);\n}\n// p. ej.: header = \"<10009>\"\n\n// chequeo primer caracter\nif (header.charAt(0) !== \"<\") {\n    throw new Error(`mensaje malformado: se esperaba un \"<\", se obtuvo un: \"${header.charAt(0)}\"`);\n}\n\n// chequeo ultimo caracter\nif (header.charAt(6) !== \">\") {\n    throw new Error(`mensaje malformado: se esperaba un \">\", se obtuvo un: \"${header.charAt(6)}\"`);\n}\n\n// chequeo que la facility exista\nidFacility = parseInt(header.substring(1, 6));\nidFacility = idFacility < 20000 ? idFacility : idFacility - 10000;\nconst facilities = horusAPI.facilities || {};\nif (!facilities[idFacility]) {\n    throw new Error(`no existe esta facility: ${idFacility}, ${header}`);\n}\n\n// Function to extract k bits from p position\n// and returns the extracted value as integer\nconst bitExtracted = (number, k, p) => (((1 << k) - 1) & (number >> p));\nlet mqttBuffer = {};\nif (isMM) {\n    // chequeo primera \"query param\"\n    let buffer = msg.payload.subarray(7, 11);\n    let substring = buffer.toString('utf-8');\n    if (substring !== \"nro=\") {\n        throw new Error(`mensaje malformado: se esperaba un \"nro=\", se obtuvo un: \"${substring}\"`);\n    }\n\n    // chequeo segunda \"query param\"\n    buffer = msg.payload.subarray(14, 20);\n    substring = buffer.toString('utf-8');\n    if (substring !== \"&data=\") {\n        throw new Error(`mensaje malformado: se esperaba un \"&data=\", se obtuvo un: \"${substring}\"`);\n    }\n\n    mqttBuffer = horusAPI.mqttBuffer || {};\n    if (!mqttBuffer[idFacility]) {\n        mqttBuffer = {\n            ...mqttBuffer,\n            [idFacility]: {\n                metadata: facilities[idFacility]\n            }\n        };\n    }\n\n    const metadata = mqttBuffer[idFacility].metadata\n\n    /*\n        \"mens-mil\": {\n            nro_mm: 2,                          // word nro\n            clasificacion: \"reservado\",         // bits 0 y 1\n            precedencia: \"rutina\",              // bits 2 y 3\n            destino: \"Puesto Comando\",          // bits 4, 5 y 6\n            origen: \"Centro de Mensajes\",       // bits 0, 1 y 2\n            evento: \"entregar\",                 // bits 3 y 4\n            cifrado: true,                      // bit 5\n        },\n    */\n\n    buffer = msg.payload.subarray(11, 13);\n    const nro_mm = buffer[0] * 256 + buffer[1];\n\n    buffer = msg.payload.subarray(20, 22);\n    const clasificacion = bitExtracted(buffer[0], 2, 0) + 1;\n    const precedencia = bitExtracted(buffer[0], 2, 2) + 1;;\n    const origen = bitExtracted(buffer[0], 3, 4) + 1;\n    const destino = bitExtracted(buffer[1], 3, 0) + 1;\n    const evento = bitExtracted(buffer[1], 2, 3) + 1;\n    const cifrado = bitExtracted(buffer[1], 1, 5);\n\n    const loraData = {\n        nro_mm,\n        clasificacion,\n        precedencia,\n        destino,\n        origen,\n        evento,\n        cifrado,\n    };\n\n\n    msg.payload = {\n        metadata,\n        loraData\n    }\n\n} else {\n    const loraPayload = msg.payload.substring(msg.payload.indexOf(\">\") + 1);\n    let loraData = {};\n    const validLoraKeys = horusAPI.validLoraKeys;\n    // ToDo: añadir mensajes militares\n    loraPayload.split(\"&\").forEach(str => {\n        const arr = str.split(\"=\");\n        if (!validLoraKeys.includes(arr[0])) {\n            throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n        }\n        loraData = {\n            ...loraData,\n            [arr[0]]: arr[1]\n        };\n    });\n\n\n    mqttBuffer = horusAPI.mqttBuffer || {};\n    if (!mqttBuffer[idFacility]) {\n        mqttBuffer = {\n            ...mqttBuffer,\n            [idFacility]: {\n                metadata: facilities[idFacility]\n            }\n        };\n    }\n\n    mqttBuffer[idFacility].loraData = {\n        ...mqttBuffer[idFacility].loraData,\n        ...loraData\n    };\n\n    msg.payload = mqttBuffer[idFacility];\n}\n\nhorusAPI = {\n    ...horusAPI,\n    mqttBuffer\n};\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "6f082191959bd86b",
+                "a3411b74910fc7e5"
+            ]
+        ]
+    },
+    {
+        "id": "d567249ea6dd76a2",
+        "type": "split",
+        "z": "205a3dbe388d752f",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 550,
+        "y": 80,
+        "wires": [
+            [
+                "665beff27c70bc7d"
+            ]
+        ]
+    },
+    {
+        "id": "665beff27c70bc7d",
+        "type": "function",
+        "z": "205a3dbe388d752f",
+        "name": "insert",
+        "func": "\nconst config = global.get(\"horusAPI\").config;\nconst headers = global.get(\"horusAPI\").headers;\nconst baseUrl = msg.payload.type === \"metrica\" ? config.url_metricas : config.url_eventos;\n\nmsg = {\n    payload: JSON.stringify(msg.payload.body),\n    url: baseUrl + msg.payload.endpoint,\n    headers\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 80,
+        "wires": [
+            [
+                "baf9389b5bf4a787"
+            ]
+        ]
+    },
+    {
+        "id": "baf9389b5bf4a787",
+        "type": "http request",
+        "z": "205a3dbe388d752f",
+        "name": "post http ok",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 850,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cb8b6a3cb85a66f6",
+        "type": "debug",
+        "z": "205a3dbe388d752f",
+        "d": true,
+        "name": "requests",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "6f082191959bd86b",
+        "type": "function",
+        "z": "205a3dbe388d752f",
+        "name": "LoRa parser",
+        "func": "const diccionario = global.get(\"horusAPI\").diccionario;\nconst traduccionEstados = {\n    S: \"en servicio\",\n    L: \"servicio limitado\",\n    F: \"fuera de servicio\"\n}\n\nconst requests = [];\n\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\nconst estado = traduccionEstados[msg.payload.loraData.status] || \"fuera de servicio\"\n\nif (!msg.payload.loraData.nro_mm) {\n    requests.push({\n        endpoint: \"estado-servicio\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            estado,\n            timestamp\n        }\n    });\n\n    if (msg.payload.loraData.voltage || msg.payload.loraData.current) {\n        requests.push({\n            endpoint: \"alimentacion\",\n            type: \"metrica\",\n            body: {\n                generador,\n                tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n                corriente: parseFloat(msg.payload.loraData.current) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.temperature) {\n        requests.push({\n            endpoint: \"temperatura\",\n            type: \"evento\",\n            body: {\n                facilidad,\n                temperature: parseFloat(msg.payload.loraData.temperature) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.gas) {\n        const nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\n        const capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\n        requests.push({\n            endpoint: \"nivel-combus\",\n            type: \"metrica\",\n            body: {\n                generador,\n                nivel,\n                capacidad,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.lat && msg.payload.loraData.lat !== \"***\") {\n        requests.push({\n            endpoint: \"geolocalizacion\",\n            type: \"evento\",\n            body: {\n                facilidad,\n                latitude: parseFloat(msg.payload.loraData.lat) || 0.0,\n                longitude: parseFloat(msg.payload.loraData.lng) || 0.0,\n                altitude: parseFloat(msg.payload.loraData.alt) || 0.0,\n                timestamp,\n            }\n        });\n    }\n\n    requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"rain\",\n            valor: msg.payload.loraData.raindrops === \"1\",\n            timestamp\n        }\n    });\n} else {\n\n    const nro_mm = msg.payload.loraData.nro_mm;\n    const clasificacion = diccionario.clasificaciones[msg.payload.loraData.clasificacion];\n    const precedencia = diccionario.precedencias[msg.payload.loraData.precedencia];\n    const cifrado = msg.payload.loraData.cifrado === 1;\n    const destino = diccionario.redes[msg.payload.loraData.destino];\n    const origen = diccionario.redes[msg.payload.loraData.origen];\n    const evento = diccionario.eventos[msg.payload.loraData.evento];\n\n    requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm,\n            clasificacion,\n            precedencia,\n            cifrado,\n            destino,\n            origen,\n            evento,\n            timestamp\n        }\n    })\n}\n\nmsg.payload = requests;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 80,
+        "wires": [
+            [
+                "d567249ea6dd76a2",
+                "cb8b6a3cb85a66f6"
+            ]
+        ]
+    },
+    {
+        "id": "a3411b74910fc7e5",
+        "type": "debug",
+        "z": "205a3dbe388d752f",
+        "d": true,
+        "name": "facility output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "15d67eb839f741f8",
+        "type": "function",
+        "z": "7c3d3a46f80e9b7d",
+        "name": "LoRa parser",
+        "func": "const { validLoraKeys, sensorica } = global.get(\"sigefaAPI\");\n\nconst loraPayload = msg.payload.substring(msg.payload.indexOf(\":\") + 1);\nlet loraData = {};\n\nloraPayload.replace(/(\\r\\n|\\n|\\r)/gm, \"\").split(\" \").forEach(str => {\n    if (str.length > 0) {\n        const arr = str.replace(\",\", \"\").split(\"=\");\n        if (!validLoraKeys.includes(arr[0])) {\n            throw new Error(`entry invalido en carga util de LoRa: ${arr[0]}`);\n        }\n        if (arr[0] in sensorica) {\n            loraData = {\n                ...loraData,\n                [arr[0]]: arr[1]\n            };\n        }\n        if (arr[0] === \"emergency\") {\n            loraData = {\n                ...loraData,\n                emergency: arr[1]\n            }\n        } \n    }\n\n});\n\n\nmsg.payload = loraData;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 80,
+        "wires": [
+            [
+                "cc3177255813ca6f"
+            ]
+        ]
+    },
+    {
+        "id": "cc3177255813ca6f",
+        "type": "split",
+        "z": "7c3d3a46f80e9b7d",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "key",
+        "x": 350,
+        "y": 80,
+        "wires": [
+            [
+                "a07ff4ca344e29e9"
+            ]
+        ]
+    },
+    {
+        "id": "a07ff4ca344e29e9",
+        "type": "function",
+        "z": "7c3d3a46f80e9b7d",
+        "name": "request",
+        "func": "const { sensorica, baseUrl, facilidadId, traduccion } = global.get(\"sigefaAPI\");\nconst previousStatus = global.get(\"sigefaAPI\").status;\nlet body = {};\nlet url = \"\";\n\nconst isSensor = msg.key in sensorica;\n\nif (isSensor) {\n    const id = parseInt(sensorica[msg.key]);\n    url = `${baseUrl}/api/facilidad/${facilidadId}/sensor/${id}/edit/`;\n    const nombre = traduccion[msg.key];\n    const indicador = msg.key === \"gas\" ? parseFloat(msg.payload.split(\"/\")[0]) : parseFloat(msg.payload);\n    body = {\n        id,\n        nombre,\n        indicador\n    };\n} else { // it should be an emergency!\n    if (msg.key !== \"emergency\") {\n        throw new Error(`error procesando esto: ${msg.key}`)\n    }\n    url = `${baseUrl}/api/facilidad/${facilidadId}/status`;\n    const status = msg.payload === \"1\" ? \"F\" : previousStatus;\n    body = {\n        nombre: \"Red Cdo\",\n        status\n    }\n}\n\nmsg = {\n    payload: body,\n    url\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 80,
+        "wires": [
+            [
+                "c59182bcf9ecdb64"
+            ]
+        ]
+    },
+    {
+        "id": "c59182bcf9ecdb64",
+        "type": "http request",
+        "z": "7c3d3a46f80e9b7d",
+        "name": "post http ok",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 670,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6fc9e2f7239c078d",
+        "type": "function",
+        "z": "bda60c0bd3eca39a",
+        "name": "request",
+        "func": "const { baseUrl, facilidadId } = global.get(\"sigefaAPI\");\nconst url = `${baseUrl}/api/facilidad/${facilidadId}/status`;\n\nmsg.url = url;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "9b4e9dc7ee88d343"
+            ]
+        ]
+    },
+    {
+        "id": "9b4e9dc7ee88d343",
+        "type": "http request",
+        "z": "bda60c0bd3eca39a",
+        "name": "get http ok",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "2dda3e74810fe7c1"
+            ]
+        ]
+    },
+    {
+        "id": "2dda3e74810fe7c1",
+        "type": "function",
+        "z": "bda60c0bd3eca39a",
+        "name": "watcher",
+        "func": "let sigefaAPI = global.get(\"sigefaAPI\");\n\nconst status = msg.payload.status;\nif (![\"F\", \"S\", \"L\"].includes(status)) {\n    throw new Error (\"status desconocido: \" + status);\n}\n\nif (sigefaAPI.firstRun || !sigefaAPI.status || status !== sigefaAPI.status) {\n    msg.payload = `USB: status=${status}\\n`;\n    sigefaAPI = {\n        ...sigefaAPI,\n        firstRun: false,\n        status\n    }\n    global.set(\"sigefaAPI\", sigefaAPI);\n    return msg;\n}\n\nreturn;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ae95c16c123ae6ac",
+        "type": "serial out",
+        "z": "85d487e8aceafc96",
+        "name": "",
+        "serial": "497cf184cd8a8026",
+        "x": 470,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "b7dfca507abe7e8c",
+        "type": "function",
+        "z": "85d487e8aceafc96",
+        "name": "ej. payload",
+        "func": "msg.payload = \"Hola Arduino!\\n\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 340,
+        "wires": [
+            [
+                "ae95c16c123ae6ac",
+                "e0a7ccd060e29a2e"
+            ]
+        ]
+    },
+    {
+        "id": "f920a62b231f0d72",
+        "type": "inject",
+        "z": "85d487e8aceafc96",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 340,
+        "wires": [
+            [
+                "b7dfca507abe7e8c"
+            ]
+        ]
+    },
+    {
+        "id": "6f58a3fb5a9ff766",
+        "type": "serial in",
+        "z": "85d487e8aceafc96",
+        "name": "",
+        "serial": "497cf184cd8a8026",
+        "x": 330,
+        "y": 440,
+        "wires": [
+            [
+                "fd64d88e14571105"
+            ]
+        ]
+    },
+    {
+        "id": "fd64d88e14571105",
+        "type": "debug",
+        "z": "85d487e8aceafc96",
+        "name": "in from USB",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "e0a7ccd060e29a2e",
+        "type": "debug",
+        "z": "85d487e8aceafc96",
+        "name": "out to USB",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "ab6dca086050ae89",
+        "type": "mqtt in",
+        "z": "5f0d43a9dc0a4da7",
+        "d": true,
+        "name": "",
+        "topic": "",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "82b1f593c0d9937c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 170,
+        "y": 480,
+        "wires": [
+            [
+                "c3b685d88a6586e5"
+            ]
+        ]
+    },
+    {
+        "id": "c3b685d88a6586e5",
+        "type": "debug",
+        "z": "5f0d43a9dc0a4da7",
+        "d": true,
+        "name": "mqtt messages",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 360,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "a6de8aa0198fe1bf",
+        "type": "mqtt out",
+        "z": "5f0d43a9dc0a4da7",
+        "name": "",
+        "topic": "lora-ccic/",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "82b1f593c0d9937c",
+        "x": 540,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "91f64efa885abb14",
+        "type": "inject",
+        "z": "5f0d43a9dc0a4da7",
+        "name": "nodo interior",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "<10009>voltage=225.00&temperature=24.50",
+        "payloadType": "str",
+        "x": 210,
+        "y": 320,
+        "wires": [
+            [
+                "a6de8aa0198fe1bf"
+            ]
+        ]
+    },
+    {
+        "id": "6a49ce7f08f0dbca",
+        "type": "inject",
+        "z": "5f0d43a9dc0a4da7",
+        "name": "nodo exterior",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "<20009>current=0.65&raindrops=1&gas=123.51/150&lat=-34.57475&lng=58.43552&alt=15",
+        "payloadType": "str",
+        "x": 210,
+        "y": 380,
+        "wires": [
+            [
+                "a6de8aa0198fe1bf"
+            ]
+        ]
+    },
+    {
+        "id": "59e3ce42801f6b8d",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "estado-servicio",
+        "payloadType": "str",
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "1a14ebb7ae9ed212"
+            ]
+        ]
+    },
+    {
+        "id": "1a14ebb7ae9ed212",
+        "type": "function",
+        "z": "3540c13fef4eaf3c",
+        "name": "metrics insert",
+        "func": "const {config, headers} = global.get(\"horusAPI\");\nconst endpoint = msg.payload;\nconst swaggerDataExamples = {\n    \"estado-servicio\": {\n        facilidad: \"ECR Cdo\",\n        estado: \"en servicio\"\n    },\n    \"longitud-cola\": {\n        facilidad: \"ECR Cdo\",\n        long_cola: 5,\n    },\n    \"nivel-combus\": {\n        generador: \"generador 1\",\n        nivel: 5.4,\n        capacidad: 10\n    },\n    \"alimentacion\": {\n        generador: \"generador 1\",\n        tension: 223.6,\n        corriente: 10.0\n    }\n};\n\nmsg.payload = JSON.stringify({\n    ...swaggerDataExamples[msg.payload],\n    timestamp: parseInt(new Date().getTime() / 1000)\n});\nmsg.url = config.url_metricas + endpoint;\n\nmsg.headers = headers;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 200,
+        "wires": [
+            [
+                "970a76e286d4227c"
+            ]
+        ]
+    },
+    {
+        "id": "1958109be324e66d",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "longitud-cola",
+        "payloadType": "str",
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "1a14ebb7ae9ed212"
+            ]
+        ]
+    },
+    {
+        "id": "561bc044cec631a7",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "nivel-combus",
+        "payloadType": "str",
+        "x": 150,
+        "y": 280,
+        "wires": [
+            [
+                "1a14ebb7ae9ed212"
+            ]
+        ]
+    },
+    {
+        "id": "c9deb913baff3738",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "alimentacion",
+        "payloadType": "str",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "1a14ebb7ae9ed212"
+            ]
+        ]
+    },
+    {
+        "id": "6f825c20a5f8abf5",
+        "type": "http request",
+        "z": "3540c13fef4eaf3c",
+        "name": "post http ok",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 570,
+        "y": 200,
+        "wires": [
+            [
+                "a1daa3ac156f9010"
+            ]
+        ]
+    },
+    {
+        "id": "a1daa3ac156f9010",
+        "type": "debug",
+        "z": "3540c13fef4eaf3c",
+        "name": "payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "7bba23b06978044a",
+        "type": "function",
+        "z": "3540c13fef4eaf3c",
+        "name": "events insert",
+        "func": "const config = global.get(\"config\");\nconst headers = global.get(\"headers\");\nconst endpoint = msg.payload === \"mens-mil\" ? \"mens-mil\" : \"sensor_bool\";\nconst swaggerDataExamples = {\n    \"mens-mil\": {\n        nro_mm: 2,\n        clasificacion: \"reservado\",\n        precedencia: \"rutina\",\n        cifrado: true,\n        destino: \"Puesto Comando\",\n        origen: \"Centro de Mensajes\",\n        evento: \"entregar\",\n    },\n    \"rain-sensor\": {\n        facilidad: \"generador 1\",\n        evento: \"rain\",\n        valor: true\n    },\n    \"presence-sensor\" : {\n        facilidad: \"generador 1\",\n        evento: \"presence\",\n        valor: true\n    }\n};\n\nmsg.payload = JSON.stringify({\n    ...swaggerDataExamples[msg.payload],\n    timestamp: parseInt(new Date().getTime() / 1000)\n});\nmsg.url = config.url_eventos + endpoint;\n\nmsg.headers = headers;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 380,
+        "wires": [
+            [
+                "970a76e286d4227c"
+            ]
+        ]
+    },
+    {
+        "id": "ad83ac8858114762",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "mens-mil",
+        "payloadType": "str",
+        "x": 140,
+        "y": 380,
+        "wires": [
+            [
+                "7bba23b06978044a"
+            ]
+        ]
+    },
+    {
+        "id": "4c48b7f4287b12e9",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "rain-sensor",
+        "payloadType": "str",
+        "x": 140,
+        "y": 460,
+        "wires": [
+            [
+                "7bba23b06978044a"
+            ]
+        ]
+    },
+    {
+        "id": "578b66f2c692bbd3",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "presence-sensor",
+        "payloadType": "str",
+        "x": 160,
+        "y": 500,
+        "wires": [
+            [
+                "7bba23b06978044a"
+            ]
+        ]
+    },
+    {
+        "id": "970a76e286d4227c",
+        "type": "debug",
+        "z": "3540c13fef4eaf3c",
+        "name": "payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "9d9a119319899a47",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": ".2 sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.2",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "4e544585afc06766"
+            ]
+        ]
+    },
+    {
+        "id": "649225654eb18410",
+        "type": "debug",
+        "z": "3540c13fef4eaf3c",
+        "name": "headers debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "14235cd51943ab1d",
+        "type": "subflow:5842f7d28b260c86",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "x": 280,
+        "y": 60,
+        "wires": [
+            [
+                "d902bf32381ca26d"
+            ]
+        ]
+    },
+    {
+        "id": "6c04391d25226b10",
+        "type": "inject",
+        "z": "3540c13fef4eaf3c",
+        "name": ".1 sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [
+                "14235cd51943ab1d"
+            ]
+        ]
+    },
+    {
+        "id": "d902bf32381ca26d",
+        "type": "debug",
+        "z": "3540c13fef4eaf3c",
+        "name": "init debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "4e544585afc06766",
+        "type": "subflow:1e494c71e42901f0",
+        "z": "3540c13fef4eaf3c",
+        "name": "",
+        "x": 300,
+        "y": 120,
+        "wires": [
+            [
+                "649225654eb18410"
+            ]
+        ]
+    }
+]
