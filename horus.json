@@ -8,6 +8,14 @@
         "env": []
     },
     {
+        "id": "0dcd6c2e7ff4d7de",
+        "type": "tab",
+        "label": "Debug",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "5842f7d28b260c86",
         "type": "subflow",
         "name": "Initialize",
@@ -228,6 +236,134 @@
         "tab": "2c9e26433f2a92f0",
         "order": 1,
         "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "09451daed0e487ca",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#0a8550",
+                "baseFont": "Verdana,Verdana,Geneva,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#0a8550",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0a8550",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0fcc7b",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0a8550",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "Verdana,Verdana,Geneva,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "e921b04d3fa5c6bc",
+        "type": "ui_tab",
+        "name": "Debug",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": true
+    },
+    {
+        "id": "8c09f9139ae0c63c",
+        "type": "ui_group",
+        "name": "Combustible",
+        "tab": "e921b04d3fa5c6bc",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "fe14c99be0cab520",
+        "type": "ui_group",
+        "name": "GPS",
+        "tab": "e921b04d3fa5c6bc",
+        "order": 2,
+        "disp": true,
         "width": "6",
         "collapse": false,
         "className": ""
@@ -536,7 +672,6 @@
         "id": "cb8b6a3cb85a66f6",
         "type": "debug",
         "z": "205a3dbe388d752f",
-        "d": true,
         "name": "requests",
         "active": true,
         "tosidebar": true,
@@ -555,7 +690,7 @@
         "type": "function",
         "z": "205a3dbe388d752f",
         "name": "LoRa parser",
-        "func": "const diccionario = global.get(\"horusAPI\").diccionario;\nconst traduccionEstados = {\n    S: \"en servicio\",\n    L: \"servicio limitado\",\n    F: \"fuera de servicio\"\n}\n\nconst requests = [];\n\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\nconst estado = traduccionEstados[msg.payload.loraData.status] || \"fuera de servicio\"\n\nif (!msg.payload.loraData.nro_mm) {\n    requests.push({\n        endpoint: \"estado-servicio\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            estado,\n            timestamp\n        }\n    });\n\n    if (msg.payload.loraData.voltage || msg.payload.loraData.current) {\n        requests.push({\n            endpoint: \"alimentacion\",\n            type: \"metrica\",\n            body: {\n                generador,\n                tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n                corriente: parseFloat(msg.payload.loraData.current) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.temperature) {\n        requests.push({\n            endpoint: \"temperatura\",\n            type: \"evento\",\n            body: {\n                facilidad,\n                temperature: parseFloat(msg.payload.loraData.temperature) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.gas) {\n        const nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\n        const capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\n        requests.push({\n            endpoint: \"nivel-combus\",\n            type: \"metrica\",\n            body: {\n                generador,\n                nivel,\n                capacidad,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.lat && msg.payload.loraData.lat !== \"***\") {\n        requests.push({\n            endpoint: \"geolocalizacion\",\n            type: \"evento\",\n            body: {\n                facilidad,\n                latitude: parseFloat(msg.payload.loraData.lat) || 0.0,\n                longitude: parseFloat(msg.payload.loraData.lng) || 0.0,\n                altitude: parseFloat(msg.payload.loraData.alt) || 0.0,\n                timestamp,\n            }\n        });\n    }\n\n    requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"rain\",\n            valor: msg.payload.loraData.raindrops === \"1\",\n            timestamp\n        }\n    });\n} else {\n\n    const nro_mm = msg.payload.loraData.nro_mm;\n    const clasificacion = diccionario.clasificaciones[msg.payload.loraData.clasificacion];\n    const precedencia = diccionario.precedencias[msg.payload.loraData.precedencia];\n    const cifrado = msg.payload.loraData.cifrado === 1;\n    const destino = diccionario.redes[msg.payload.loraData.destino];\n    const origen = diccionario.redes[msg.payload.loraData.origen];\n    const evento = diccionario.eventos[msg.payload.loraData.evento];\n\n    requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm,\n            clasificacion,\n            precedencia,\n            cifrado,\n            destino,\n            origen,\n            evento,\n            timestamp\n        }\n    })\n}\n\nmsg.payload = requests;\nreturn msg;",
+        "func": "const horusAPI = global.get(\"horusAPI\")\nconst diccionario = horusAPI.diccionario;\nconst traduccionEstados = {\n    S: \"en servicio\",\n    L: \"servicio limitado\",\n    F: \"fuera de servicio\"\n}\n\nconst requests = [];\n\nconst naftaDebug = horusAPI.uiNaftaDebugMode;\nconst naftaPercentageDebug = horusAPI.uiNaftaDebugPercentage;\nconst gpsDebug = horusAPI.uiGPSDebugMode;\nconst latDebug = horusAPI.uiGPSDebugLat;\nconst longDebug = horusAPI.uiGPSDebugLong;\nconst altDebug = horusAPI.uiGPSDebugAlt;\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\nconst estado = traduccionEstados[msg.payload.loraData.status] || \"fuera de servicio\"\n\nif (!msg.payload.loraData.nro_mm) {\n    requests.push({\n        endpoint: \"estado-servicio\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            estado,\n            timestamp\n        }\n    });\n\n    if (msg.payload.loraData.voltage || msg.payload.loraData.current) {\n        requests.push({\n            endpoint: \"alimentacion\",\n            type: \"metrica\",\n            body: {\n                generador,\n                tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n                corriente: parseFloat(msg.payload.loraData.current) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.temperature) {\n        requests.push({\n            endpoint: \"temperatura\",\n            type: \"evento\",\n            body: {\n                facilidad,\n                temperature: parseFloat(msg.payload.loraData.temperature) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.gas) {\n        let nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\n        const capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\n        if (naftaDebug) {\n            nivel = capacidad * naftaPercentageDebug / 100.0; \n        }\n        requests.push({\n            endpoint: \"nivel-combus\",\n            type: \"metrica\",\n            body: {\n                generador,\n                nivel,\n                capacidad,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.lat) {\n        if (gpsDebug) {\n            requests.push({\n                endpoint: \"geolocalizacion\",\n                type: \"evento\",\n                body: {\n                    facilidad,\n                    latitude: latDebug,\n                    longitude: longDebug,\n                    altitude: altDebug,\n                    timestamp,\n                }\n            });\n        } else {\n            if (msg.payload.loraData.lat !== \"***\") {\n                requests.push({\n                    endpoint: \"geolocalizacion\",\n                    type: \"evento\",\n                    body: {\n                        facilidad,\n                        latitude: parseFloat(msg.payload.loraData.lat) || 0.0,\n                        longitude: parseFloat(msg.payload.loraData.lng) || 0.0,\n                        altitude: parseFloat(msg.payload.loraData.alt) || 0.0,\n                        timestamp,\n                    }\n                });\n            }\n        }       \n    }\n\n    requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"rain\",\n            valor: msg.payload.loraData.raindrops === \"1\",\n            timestamp\n        }\n    });\n} else {\n\n    const nro_mm = msg.payload.loraData.nro_mm;\n    const clasificacion = diccionario.clasificaciones[msg.payload.loraData.clasificacion];\n    const precedencia = diccionario.precedencias[msg.payload.loraData.precedencia];\n    const cifrado = msg.payload.loraData.cifrado === 1;\n    const destino = diccionario.redes[msg.payload.loraData.destino];\n    const origen = diccionario.redes[msg.payload.loraData.origen];\n    const evento = diccionario.eventos[msg.payload.loraData.evento];\n\n    requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm,\n            clasificacion,\n            precedencia,\n            cifrado,\n            destino,\n            origen,\n            evento,\n            timestamp\n        }\n    })\n}\n\nmsg.payload = requests;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -731,9 +866,9 @@
         "z": "4f13ca8d684be14d",
         "name": "http error",
         "scope": [
-            "8fe334ecd6a161e8",
+            "a141e0b894432d41",
             "a3fe606a94c5478c",
-            "a141e0b894432d41"
+            "8fe334ecd6a161e8"
         ],
         "uncaught": false,
         "x": 920,
@@ -1210,34 +1345,6 @@
         "wires": []
     },
     {
-        "id": "f188432b4508e72e",
-        "type": "ui_numeric",
-        "z": "4f13ca8d684be14d",
-        "name": "",
-        "label": "LoRa ID",
-        "tooltip": "Identificador LoRa",
-        "group": "56160cc0ad9f5e14",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "wrap": true,
-        "passthru": true,
-        "topic": "topic",
-        "topicType": "msg",
-        "format": "{{value}}",
-        "min": "10000",
-        "max": "29999",
-        "step": 1,
-        "className": "",
-        "x": 340,
-        "y": 640,
-        "wires": [
-            [
-                "a626cdbb7f2557bb"
-            ]
-        ]
-    },
-    {
         "id": "a626cdbb7f2557bb",
         "type": "function",
         "z": "4f13ca8d684be14d",
@@ -1277,7 +1384,7 @@
         "y": 640,
         "wires": [
             [
-                "f188432b4508e72e"
+                "d6225589252ca6dd"
             ]
         ]
     },
@@ -1438,5 +1545,490 @@
                 "4138f62c81ccba5c"
             ]
         ]
+    },
+    {
+        "id": "d6225589252ca6dd",
+        "type": "ui_text_input",
+        "z": "4f13ca8d684be14d",
+        "name": "",
+        "label": "ID",
+        "tooltip": "Identificador del nodo LoRa",
+        "group": "56160cc0ad9f5e14",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "number",
+        "delay": "0",
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 350,
+        "y": 640,
+        "wires": [
+            [
+                "a626cdbb7f2557bb"
+            ]
+        ]
+    },
+    {
+        "id": "a06b8428862580a2",
+        "type": "ui_switch",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "label": "Debug",
+        "tooltip": "",
+        "group": "8c09f9139ae0c63c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 210,
+        "y": 140,
+        "wires": [
+            [
+                "ed45ba389f09350b"
+            ]
+        ]
+    },
+    {
+        "id": "ed45ba389f09350b",
+        "type": "function",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "save uiNaftaDebugMode",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nhorusAPI = {\n    ...horusAPI,\n    uiNaftaDebugMode: msg.payload\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "bdead77c8e185327",
+        "type": "ui_slider",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "label": "Porcentaje",
+        "tooltip": "",
+        "group": "8c09f9139ae0c63c",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "100",
+        "step": "0.1",
+        "className": "",
+        "x": 230,
+        "y": 200,
+        "wires": [
+            [
+                "181961277d0b91e4"
+            ]
+        ]
+    },
+    {
+        "id": "181961277d0b91e4",
+        "type": "function",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "save uiNaftaDebugBase",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nhorusAPI = {\n    ...horusAPI,\n    uiNaftaDebugBase: msg.payload\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9947e77d6d1cc7c4",
+        "type": "ui_button",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "group": "8c09f9139ae0c63c",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reset",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "reset",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 210,
+        "y": 300,
+        "wires": [
+            [
+                "b8a9fcd8f7a4c006"
+            ]
+        ]
+    },
+    {
+        "id": "b8a9fcd8f7a4c006",
+        "type": "function",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "simular consumo",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nif (msg.payload === \"reset\") {\n    const base = horusAPI.uiNaftaDebugBase;\n    horusAPI = {\n        ...horusAPI,\n        uiNaftaDebugPercentage: base || 50.0\n    }\n} else if (msg.payload === \"consume\") {\n    let actual = horusAPI.uiNaftaDebugPercentage;\n    if (horusAPI.uiNaftaDebugAutoConsume) {\n        actual = actual > 0.1 ? actual - 0.1 : 0.0;\n    }\n    horusAPI = {\n        ...horusAPI,\n        uiNaftaDebugPercentage: actual\n    }\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "5d8fd1623355d33c",
+        "type": "inject",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "consume",
+        "payloadType": "str",
+        "x": 230,
+        "y": 360,
+        "wires": [
+            [
+                "b8a9fcd8f7a4c006"
+            ]
+        ]
+    },
+    {
+        "id": "21af34b96a659807",
+        "type": "ui_switch",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "label": "Debug",
+        "tooltip": "",
+        "group": "fe14c99be0cab520",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 210,
+        "y": 440,
+        "wires": [
+            [
+                "04771260d23a2ff0"
+            ]
+        ]
+    },
+    {
+        "id": "04771260d23a2ff0",
+        "type": "function",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "save uiGPSDebugMode",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nhorusAPI = {\n    ...horusAPI,\n    uiGPSDebugMode: msg.payload\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "35b5016be38e1116",
+        "type": "inject",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "",
+        "payload": "-34.59702",
+        "payloadType": "num",
+        "x": 230,
+        "y": 500,
+        "wires": [
+            [
+                "b38c8cc21d2b0885"
+            ]
+        ]
+    },
+    {
+        "id": "274c44fe5755cb15",
+        "type": "inject",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "",
+        "payload": "-58.60328",
+        "payloadType": "num",
+        "x": 230,
+        "y": 540,
+        "wires": [
+            [
+                "b74b4b0cc42d9a71"
+            ]
+        ]
+    },
+    {
+        "id": "1ad7019a823923b3",
+        "type": "inject",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "",
+        "payload": "15",
+        "payloadType": "num",
+        "x": 210,
+        "y": 580,
+        "wires": [
+            [
+                "4499d8d3d7cc3e46"
+            ]
+        ]
+    },
+    {
+        "id": "405417cbb25dfe3c",
+        "type": "function",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "save uiGPSDebugLat",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nhorusAPI = {\n    ...horusAPI,\n    uiGPSDebugLat: msg.payload\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "e22a02701e42a6a2",
+        "type": "function",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "save uiGPSDebugLong",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nhorusAPI = {\n    ...horusAPI,\n    uiGPSDebugLong: msg.payload\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "ab533ff1c1a1a839",
+        "type": "function",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "save uiGPSDebugAlt",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nhorusAPI = {\n    ...horusAPI,\n    uiGPSDebugAlt: msg.payload\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "b38c8cc21d2b0885",
+        "type": "ui_text_input",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "label": "Latitud",
+        "tooltip": "",
+        "group": "fe14c99be0cab520",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "number",
+        "delay": "0",
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 390,
+        "y": 500,
+        "wires": [
+            [
+                "405417cbb25dfe3c"
+            ]
+        ]
+    },
+    {
+        "id": "b74b4b0cc42d9a71",
+        "type": "ui_text_input",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "label": "Longitud",
+        "tooltip": "",
+        "group": "fe14c99be0cab520",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "number",
+        "delay": "0",
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 400,
+        "y": 540,
+        "wires": [
+            [
+                "e22a02701e42a6a2"
+            ]
+        ]
+    },
+    {
+        "id": "4499d8d3d7cc3e46",
+        "type": "ui_text_input",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "label": "Altitud",
+        "tooltip": "",
+        "group": "fe14c99be0cab520",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "number",
+        "delay": "0",
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 390,
+        "y": 580,
+        "wires": [
+            [
+                "ab533ff1c1a1a839"
+            ]
+        ]
+    },
+    {
+        "id": "c802d7e1c3f2bcb4",
+        "type": "ui_switch",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "",
+        "label": "Auto consumo",
+        "tooltip": "",
+        "group": "8c09f9139ae0c63c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 240,
+        "y": 240,
+        "wires": [
+            [
+                "7ecd1b34511c3ab8"
+            ]
+        ]
+    },
+    {
+        "id": "7ecd1b34511c3ab8",
+        "type": "function",
+        "z": "0dcd6c2e7ff4d7de",
+        "name": "save uiNaftaDebugAutoConsume",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nhorusAPI = {\n    ...horusAPI,\n    uiNaftaDebugAutoConsume: msg.payload\n}\nglobal.set(\"horusAPI\", horusAPI);\n\nreturn;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 240,
+        "wires": []
     }
 ]
