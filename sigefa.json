@@ -220,26 +220,9 @@
         "color": "#DDAA99"
     },
     {
-        "id": "2c9e26433f2a92f0",
-        "type": "ui_tab",
-        "name": "Conector Horus NRUI",
-        "icon": "fa-eye",
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "e921b04d3fa5c6bc",
-        "type": "ui_tab",
-        "name": "Debug",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": true
-    },
-    {
         "id": "497cf184cd8a8026",
         "type": "serial-port",
-        "d": true,
-        "serialport": "COM5",
+        "serialport": "COM3",
         "serialbaud": "9600",
         "databits": "8",
         "parity": "none",
@@ -256,9 +239,108 @@
         "responsetimeout": "10000"
     },
     {
-        "id": "c9ccc3d91124913b",
+        "id": "09451daed0e487ca",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#0a8550",
+                "baseFont": "Verdana,Verdana,Geneva,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#0a8550",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0a8550",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0fcc7b",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0a8550",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "Verdana,Verdana,Geneva,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "58d1bdea4defcf66",
         "type": "sqlitedb",
-        "db": "C:\\Users\\Fran\\OneDrive\\Documentos\\VSCode\\Tesis\\SIGEFA\\db.sqlite3",
+        "z": "eaaada171af64f50",
+        "db": "C:\\Users\\jdonadel\\OneDrive - Banco Macro S.A\\Escritorio\\tesis\\repos\\SIGEFA_new\\SIGEFA\\db.sqlite3",
         "mode": "RO"
     },
     {
@@ -340,7 +422,7 @@
         "type": "function",
         "z": "5842f7d28b260c86",
         "name": "save other constants",
-        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"status\"];\nconst validMMKeys = [\"nro_mm\", \"origen\", \"destino\", \"clasificacion\", \"precedencia\", \"cifrado\", \"evento\", \"mensaje\"];\nconst diccionario = {\n    clasificaciones: {\n        1: \"publico\",\n        2: \"reservado\",\n        3: \"confidencial\",\n        4: \"secreto\"\n    },\n    precedencias: {\n        1: \"rutina\",\n        2: \"prioridad\",\n        3: \"inmediato\",\n        4: \"flash\"\n    },\n    redes: {\n        1: \"Red Cdo Op\",\n        2: \"Red Mat Pers\",\n        3: \"Red Icia\",\n        4: \"Red Cdo\",\n        5: \"Red Op\"\n    },\n    eventos: {\n        1: \"generado\",\n        2: \"recibido_estafeta\",\n        3: \"entregado_estafeta\",\n        4: \"transmitido\"\n    }\n}\n\nhorusAPI = {\n    ...horusAPI,\n    validLoraKeys,\n    validMMKeys,\n    diccionario\n}\n\nglobal.set(\"horusAPI\", horusAPI);\n\nmsg.payload = {\n    validLoraKeys,\n    validMMKeys,\n    diccionario\n}\n\nreturn msg;",
+        "func": "let horusAPI = global.get(\"horusAPI\") || {};\nconst validLoraKeys = [\"voltage\", \"temperature\", \"current\", \"raindrops\", \"gas\", \"lat\", \"lng\", \"alt\", \"status\"];\nconst validMMKeys = [\"nro\", \"o\", \"d\", \"cl\", \"p\", \"ci\", \"e\", \"m\"];\nconst diccionario = {\n    clasificaciones: {\n        1: \"publico\",\n        2: \"reservado\",\n        3: \"confidencial\",\n        4: \"secreto\"\n    },\n    precedencias: {\n        1: \"rutina\",\n        2: \"prioridad\",\n        3: \"inmediato\",\n        4: \"flash\"\n    },\n    redes: {\n        1: \"Red Cdo Op\",\n        2: \"Red Mat Pers\",\n        3: \"Red Icia\",\n        4: \"Red Cdo\",\n        5: \"Red Op\"\n    },\n    eventos: {\n        1: \"generado\",\n        2: \"recibido_estafeta\",\n        3: \"entregado_estafeta\",\n        4: \"transmitido\"\n    }\n}\n\nhorusAPI = {\n    ...horusAPI,\n    validLoraKeys,\n    validMMKeys,\n    diccionario\n}\n\nglobal.set(\"horusAPI\", horusAPI);\n\nmsg.payload = {\n    validLoraKeys,\n    validMMKeys,\n    diccionario\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -565,7 +647,6 @@
         "id": "cb8b6a3cb85a66f6",
         "type": "debug",
         "z": "205a3dbe388d752f",
-        "d": true,
         "name": "requests",
         "active": true,
         "tosidebar": true,
@@ -584,7 +665,7 @@
         "type": "function",
         "z": "205a3dbe388d752f",
         "name": "LoRa parser",
-        "func": "const horusAPI = global.get(\"horusAPI\")\nconst diccionario = horusAPI.diccionario;\nconst traduccionEstados = {\n    S: \"en servicio\",\n    L: \"servicio limitado\",\n    F: \"fuera de servicio\"\n}\n\nconst requests = [];\n\nconst naftaDebug = horusAPI.uiNaftaDebugMode;\nconst naftaPercentageDebug = horusAPI.uiNaftaDebugPercentage;\nconst gpsDebug = horusAPI.uiGPSDebugMode;\nconst latDebug = horusAPI.uiGPSDebugLat;\nconst longDebug = horusAPI.uiGPSDebugLong;\nconst altDebug = horusAPI.uiGPSDebugAlt;\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\nconst estado = traduccionEstados[msg.payload.loraData.status] || \"fuera de servicio\"\n\nif (!msg.payload.loraData.nro_mm) {\n    requests.push({\n        endpoint: \"estado-servicio\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            estado,\n            timestamp\n        }\n    });\n\n    if (msg.payload.loraData.voltage || msg.payload.loraData.current) {\n        requests.push({\n            endpoint: \"alimentacion\",\n            type: \"metrica\",\n            body: {\n                generador,\n                tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n                corriente: parseFloat(msg.payload.loraData.current) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.temperature) {\n        requests.push({\n            endpoint: \"temperatura\",\n            type: \"evento\",\n            body: {\n                facilidad,\n                temperature: parseFloat(msg.payload.loraData.temperature) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.gas) {\n        let nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\n        const capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\n        if (naftaDebug) {\n            nivel = capacidad * naftaPercentageDebug / 100.0; \n        }\n        requests.push({\n            endpoint: \"nivel-combus\",\n            type: \"metrica\",\n            body: {\n                generador,\n                nivel,\n                capacidad,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.lat) {\n        if (gpsDebug) {\n            requests.push({\n                endpoint: \"geolocalizacion\",\n                type: \"evento\",\n                body: {\n                    facilidad,\n                    latitude: latDebug,\n                    longitude: longDebug,\n                    altitude: altDebug,\n                    timestamp,\n                }\n            });\n        } else {\n            if (msg.payload.loraData.lat !== \"***\") {\n                requests.push({\n                    endpoint: \"geolocalizacion\",\n                    type: \"evento\",\n                    body: {\n                        facilidad,\n                        latitude: parseFloat(msg.payload.loraData.lat) || 0.0,\n                        longitude: parseFloat(msg.payload.loraData.lng) || 0.0,\n                        altitude: parseFloat(msg.payload.loraData.alt) || 0.0,\n                        timestamp,\n                    }\n                });\n            }\n        }       \n    }\n\n    requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"rain\",\n            valor: msg.payload.loraData.raindrops === \"1\",\n            timestamp\n        }\n    });\n} else {\n\n    const nro_mm = parseInt(msg.payload.loraData.nro_mm);\n    const clasificacion = diccionario.clasificaciones[msg.payload.loraData.clasificacion];\n    const precedencia = diccionario.precedencias[msg.payload.loraData.precedencia];\n    const cifrado = msg.payload.loraData.cifrado === \"1\";\n    const destino = diccionario.redes[msg.payload.loraData.destino];\n    const origen = diccionario.redes[msg.payload.loraData.origen];\n    const evento = diccionario.eventos[msg.payload.loraData.evento];\n    const mensaje = msg.payload.loraData.mensaje;\n\n    requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm,\n            clasificacion,\n            precedencia,\n            cifrado,\n            destino,\n            origen,\n            evento,\n            mensaje,\n            timestamp\n        }\n    })\n}\n\nmsg.payload = requests;\nreturn msg;",
+        "func": "const horusAPI = global.get(\"horusAPI\")\nconst diccionario = horusAPI.diccionario;\nconst traduccionEstados = {\n    S: \"en servicio\",\n    L: \"servicio limitado\",\n    F: \"fuera de servicio\"\n}\n\nconst requests = [];\n\nconst naftaDebug = horusAPI.uiNaftaDebugMode;\nconst naftaPercentageDebug = horusAPI.uiNaftaDebugPercentage;\nconst gpsDebug = horusAPI.uiGPSDebugMode;\nconst latDebug = horusAPI.uiGPSDebugLat;\nconst longDebug = horusAPI.uiGPSDebugLong;\nconst altDebug = horusAPI.uiGPSDebugAlt;\nconst timestamp = parseInt(new Date().getTime() / 1000);\nconst facilidad = msg.payload.metadata.name;\nconst generador = msg.payload.metadata.generator;\nconst estado = traduccionEstados[msg.payload.loraData.status] || \"fuera de servicio\"\n\nif (!msg.payload.loraData.nro) {\n    requests.push({\n        endpoint: \"estado-servicio\",\n        type: \"metrica\",\n        body: {\n            facilidad,\n            estado,\n            timestamp\n        }\n    });\n\n    if (msg.payload.loraData.voltage || msg.payload.loraData.current) {\n        requests.push({\n            endpoint: \"alimentacion\",\n            type: \"metrica\",\n            body: {\n                generador,\n                tension: parseFloat(msg.payload.loraData.voltage) || 0.0,\n                corriente: parseFloat(msg.payload.loraData.current) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.temperature) {\n        requests.push({\n            endpoint: \"temperatura\",\n            type: \"evento\",\n            body: {\n                facilidad,\n                temperature: parseFloat(msg.payload.loraData.temperature) || 0.0,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.gas) {\n        let nivel = parseFloat(msg.payload.loraData.gas?.split(\"/\")[0]) || 0.0;\n        const capacidad = parseFloat(msg.payload.loraData.gas?.split(\"/\")[1]) || 1.0;\n        if (naftaDebug) {\n            nivel = capacidad * naftaPercentageDebug / 100.0; \n        }\n        requests.push({\n            endpoint: \"nivel-combus\",\n            type: \"metrica\",\n            body: {\n                generador,\n                nivel,\n                capacidad,\n                timestamp\n            }\n        });\n    }\n\n    if (msg.payload.loraData.lat) {\n        if (gpsDebug) {\n            requests.push({\n                endpoint: \"geolocalizacion\",\n                type: \"evento\",\n                body: {\n                    facilidad,\n                    latitude: latDebug,\n                    longitude: longDebug,\n                    altitude: altDebug,\n                    timestamp,\n                }\n            });\n        } else {\n            if (msg.payload.loraData.lat !== \"***\") {\n                requests.push({\n                    endpoint: \"geolocalizacion\",\n                    type: \"evento\",\n                    body: {\n                        facilidad,\n                        latitude: parseFloat(msg.payload.loraData.lat) || 0.0,\n                        longitude: parseFloat(msg.payload.loraData.lng) || 0.0,\n                        altitude: parseFloat(msg.payload.loraData.alt) || 0.0,\n                        timestamp,\n                    }\n                });\n            }\n        }       \n    }\n\n    requests.push({\n        endpoint: \"sensor_bool\",\n        type: \"evento\",\n        body: {\n            facilidad,\n            evento: \"rain\",\n            valor: msg.payload.loraData.raindrops === \"1\",\n            timestamp\n        }\n    });\n} else {\n\n    const nro_mm = parseInt(msg.payload.loraData.nro);\n    const clasificacion = diccionario.clasificaciones[msg.payload.loraData.cl];\n    const precedencia = diccionario.precedencias[msg.payload.loraData.p];\n    const cifrado = msg.payload.loraData.ci === \"1\";\n    const destino = diccionario.redes[msg.payload.loraData.d];\n    const origen = diccionario.redes[msg.payload.loraData.o];\n    const evento = diccionario.eventos[msg.payload.loraData.e];\n    const mensaje = msg.payload.loraData.m;\n\n    requests.push({\n        endpoint: \"mens-mil\",\n        type: \"evento\",\n        body: {\n            nro_mm,\n            clasificacion,\n            precedencia,\n            cifrado,\n            destino,\n            origen,\n            evento,\n            mensaje,\n            timestamp\n        }\n    })\n}\n\nmsg.payload = requests;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -603,7 +684,6 @@
         "id": "a3411b74910fc7e5",
         "type": "debug",
         "z": "205a3dbe388d752f",
-        "d": true,
         "name": "facility output",
         "active": true,
         "tosidebar": true,
@@ -755,23 +835,6 @@
         ]
     },
     {
-        "id": "ad4031e5e5ef311f",
-        "type": "sqlite",
-        "z": "eaaada171af64f50",
-        "mydb": "c9ccc3d91124913b",
-        "sqlquery": "msg.topic",
-        "sql": "",
-        "name": "SIGEFA DB",
-        "x": 350,
-        "y": 80,
-        "wires": [
-            [
-                "c777938be3a7d992",
-                "57ac04f2f554ac5b"
-            ]
-        ]
-    },
-    {
         "id": "b8dd5708abf24b77",
         "type": "function",
         "z": "eaaada171af64f50",
@@ -782,11 +845,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 190,
+        "x": 210,
         "y": 80,
         "wires": [
             [
-                "ad4031e5e5ef311f"
+                "6f60f8d362387d49"
             ]
         ]
     },
@@ -812,7 +875,7 @@
         "type": "function",
         "z": "eaaada171af64f50",
         "name": "objectify",
-        "func": "const length = msg.payload.length;\nconst lastObject = msg.payload[length-1];\nconst { facilidadId } = global.get(\"sigefaAPI\");\n\nconst diccionario = {\n    clasificaciones: {\n        \"publico\": 1,\n        \"reservado\": 2,\n        \"confidencial\": 3,\n        \"secreto\": 4,\n    },\n    precedencias: {\n        \"rutina\": 1,\n        \"prioridad\": 2,\n        \"inmediato\": 3,\n        \"flash\": 4\n    },\n    redes: {\n        \"Red Cdo Op\": 1,\n        \"Red Mat Pers\": 2,\n        \"Red Icia\": 3,\n        \"Red Cdo\": 4,\n        \"Red Op\": 5\n    },\n    eventos: {\n        \"generado\": 1,\n        \"recibido_estafeta\": 2,\n        \"entregado_estafeta\": 3,\n        \"transmitido\": 4\n    }\n}\n\n/* \n    mensaje de ejemplo\n    ORIGEN: Red Mat Pers\n    CLASIFICACION: publico\n    PRECEDENCIA: rutina\n    EVENTO: generado\n    MENSAJE: xxx\n*/\n\nconst searchInDescription = (key, arr) => {\n    const found = arr.find(element => element.includes(key.toUpperCase()));\n    if (!found) {\n        if (key === \"Cifrado\") {\n            return false;\n        }\n        throw new Error(`no se pudo obtener el ${key} del mensaje`);\n    }\n    if (key === \"Cifrado\") {\n        return true;\n    }\n\n    const payload = found.split(\":\")[1].trim();\n    if (key === \"Origen\" || key === \"Destino\") {\n        const traducido = diccionario.redes[payload];\n        if (!traducido) {\n            throw new Error(`no se encontro ${payload} en el diccionario`);\n        }\n        return traducido;\n    } else if (key === \"Clasificacion\") {\n        const traducido = diccionario.clasificaciones[payload];\n        if (!traducido) {\n            throw new Error(`no se encontro ${payload} en el diccionario`);\n        }\n        return traducido;\n    } else if (key === \"Precedencia\") {\n        const traducido = diccionario.precedencias[payload];\n        if (!traducido) {\n            throw new Error(`no se encontro ${payload} en el diccionario`);\n        }\n        return traducido;\n    } else if (key === \"Evento\") {\n        const traducido = diccionario.eventos[payload];\n        if (!traducido) {\n            throw new Error(`no se encontro ${payload} en el diccionario`);\n        }\n        return traducido;\n    } else if (key === \"Mensaje\") {\n        return payload;\n    }\n}\n\nconst traductorSIGEFAHorus = (sigefaObj) => {\n    const { id, subtipo_id, description } = sigefaObj;\n    const descriptionArrayByLines = description.split(\"\\n\");\n    let destino, origen;\n    if (subtipo_id === 1) {\n        // mensaje entrante\n        destino = facilidadId;\n        origen = searchInDescription(\"Origen\", descriptionArrayByLines);\n    } else if (subtipo_id === 2) {\n        // mensaje saliente\n        origen = facilidadId;\n        destino = searchInDescription(\"Destino\", descriptionArrayByLines);\n    } else {\n        throw new Error(\"subtipo de mensaje SIGEFA desconocido\");\n    }\n    const clasificacion = searchInDescription(\"Clasificacion\", descriptionArrayByLines);\n    const precedencia = searchInDescription(\"Precedencia\", descriptionArrayByLines);\n    const cifrado = searchInDescription(\"Cifrado\", descriptionArrayByLines);\n    const evento = searchInDescription(\"Evento\", descriptionArrayByLines);\n    const mensaje = searchInDescription(\"Mensaje\", descriptionArrayByLines);\n    return {\n        nro_mm: id,\n        origen, \n        destino,\n        clasificacion,\n        precedencia,\n        cifrado,\n        evento,\n        mensaje\n    }\n};\n\nmsg.payload = traductorSIGEFAHorus(lastObject);\n\nreturn msg;",
+        "func": "const length = msg.payload.length;\nconst lastObject = msg.payload[length-1];\nconst { facilidadId } = global.get(\"sigefaAPI\");\n\nconst diccionario = {\n    clasificaciones: {\n        \"publico\": 1,\n        \"reservado\": 2,\n        \"confidencial\": 3,\n        \"secreto\": 4,\n    },\n    precedencias: {\n        \"rutina\": 1,\n        \"prioridad\": 2,\n        \"inmediato\": 3,\n        \"flash\": 4\n    },\n    redes: {\n        \"Red Cdo Op\": 1,\n        \"Red Mat Pers\": 2,\n        \"Red Icia\": 3,\n        \"Red Cdo\": 4,\n        \"Red Op\": 5\n    },\n    eventos: {\n        \"generado\": 1,\n        \"recibido_estafeta\": 2,\n        \"entregado_estafeta\": 3,\n        \"transmitido\": 4\n    }\n}\n\n/* \n    mensaje de ejemplo\n    ORIGEN: Red Mat Pers\n    CLASIFICACION: publico\n    PRECEDENCIA: rutina\n    EVENTO: generado\n    MENSAJE: xxx\n*/\n\nconst searchInDescription = (key, arr) => {\n    const found = arr.find(element => element.includes(key.toUpperCase()));\n    if (!found) {\n        if (key === \"Cifrado\") {\n            return 0;\n        }\n        throw new Error(`no se pudo obtener el ${key} del mensaje`);\n    }\n    if (key === \"Cifrado\") {\n        return 1;\n    }\n\n    const payload = found.split(\":\")[1].trim();\n    if (key === \"Origen\" || key === \"Destino\") {\n        const traducido = diccionario.redes[payload];\n        if (!traducido) {\n            throw new Error(`no se encontro ${payload} en el diccionario`);\n        }\n        return traducido;\n    } else if (key === \"Clasificacion\") {\n        const traducido = diccionario.clasificaciones[payload];\n        if (!traducido) {\n            throw new Error(`no se encontro ${payload} en el diccionario`);\n        }\n        return traducido;\n    } else if (key === \"Precedencia\") {\n        const traducido = diccionario.precedencias[payload];\n        if (!traducido) {\n            throw new Error(`no se encontro ${payload} en el diccionario`);\n        }\n        return traducido;\n    } else if (key === \"Evento\") {\n        const traducido = diccionario.eventos[payload];\n        if (!traducido) {\n            throw new Error(`no se encontro ${payload} en el diccionario`);\n        }\n        return traducido;\n    } else if (key === \"Mensaje\") {\n        return payload;\n    }\n}\n\nconst traductorSIGEFAHorus = (sigefaObj) => {\n    const { id, subtipo_id, description } = sigefaObj;\n    const descriptionArrayByLines = description.split(\"\\n\");\n    let destino, origen;\n    if (subtipo_id === 1) {\n        // mensaje entrante\n        destino = facilidadId;\n        origen = searchInDescription(\"Origen\", descriptionArrayByLines);\n    } else if (subtipo_id === 2) {\n        // mensaje saliente\n        origen = facilidadId;\n        destino = searchInDescription(\"Destino\", descriptionArrayByLines);\n    } else {\n        throw new Error(\"subtipo de mensaje SIGEFA desconocido\");\n    }\n    const clasificacion = searchInDescription(\"Clasificacion\", descriptionArrayByLines);\n    const precedencia = searchInDescription(\"Precedencia\", descriptionArrayByLines);\n    const cifrado = searchInDescription(\"Cifrado\", descriptionArrayByLines);\n    const evento = searchInDescription(\"Evento\", descriptionArrayByLines);\n    const mensaje = searchInDescription(\"Mensaje\", descriptionArrayByLines);\n    return {\n        nro_mm: id,\n        origen, \n        destino,\n        clasificacion,\n        precedencia,\n        cifrado,\n        evento,\n        mensaje\n    }\n};\n\nmsg.payload = traductorSIGEFAHorus(lastObject);\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -849,7 +912,7 @@
         "type": "function",
         "z": "eaaada171af64f50",
         "name": "watcher",
-        "func": "let sigefaAPI = global.get(\"sigefaAPI\");\nconst { nro_mm } = msg.payload;\n\nconst stringify = (obj) => {\n    const keys = Object.keys(obj);\n    let str = \"USB: \";\n    keys.forEach((key, index) => {\n        const isLast = keys.length === index + 1;\n        str += key;\n        str += \"=\"\n        str += obj[key];\n        if (!isLast) {\n            str += \", \";\n        }\n    });\n    return str;\n}\n\nif (!sigefaAPI.nro_mm || sigefaAPI.nro_mm < nro_mm) {\n    sigefaAPI = {\n        ...sigefaAPI,\n        nro_mm\n    }\n    global.set(\"sigefaAPI\", sigefaAPI);\n    msg.payload = stringify(msg.payload);\n    return msg;\n}\n\nreturn;",
+        "func": "let sigefaAPI = global.get(\"sigefaAPI\");\nconst { nro_mm } = msg.payload;\n\nconst reducer = {\n    \"nro_mm\": \"nro\",\n    \"origen\": \"o\",\n    \"destino\": \"d\",\n    \"clasificacion\": \"cl\",\n    \"precedencia\": \"p\",\n    \"cifrado\": \"ci\",\n    \"evento\": \"e\",\n    \"mensaje\": \"m\",\n}\n\nconst stringify = (obj) => {\n    const keys = Object.keys(obj);\n    let str = \"USB: \";\n    keys.forEach((key, index) => {\n        const isLast = keys.length === index + 1;\n        str += reducer[key];\n        str += \"=\"\n        str += obj[key];\n        if (!isLast) {\n            str += \"&\";\n        }\n    });\n    return str;\n}\n\nif (!sigefaAPI.nro_mm || sigefaAPI.nro_mm < nro_mm) {\n    sigefaAPI = {\n        ...sigefaAPI,\n        nro_mm\n    }\n    global.set(\"sigefaAPI\", sigefaAPI);\n    msg.payload = `${stringify(msg.payload)}\\n`;\n    return msg;\n}\n\nreturn;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -879,6 +942,23 @@
         "x": 870,
         "y": 160,
         "wires": []
+    },
+    {
+        "id": "6f60f8d362387d49",
+        "type": "sqlite",
+        "z": "eaaada171af64f50",
+        "mydb": "58d1bdea4defcf66",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "db",
+        "x": 350,
+        "y": 80,
+        "wires": [
+            [
+                "c777938be3a7d992",
+                "57ac04f2f554ac5b"
+            ]
+        ]
     },
     {
         "id": "2332b5fe09d16da5",
@@ -994,7 +1074,7 @@
         "type": "debug",
         "z": "e47eef669dc31ecb",
         "name": "http response",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1144,7 +1224,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 310,
+        "x": 330,
         "y": 320,
         "wires": []
     },
@@ -1273,7 +1353,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 190,
-        "y": 160,
+        "y": 180,
         "wires": [
             [
                 "8fca913319b69539"
@@ -1292,7 +1372,7 @@
         "finalize": "",
         "libs": [],
         "x": 350,
-        "y": 160,
+        "y": 180,
         "wires": []
     },
     {
@@ -1347,7 +1427,7 @@
         "type": "function",
         "z": "e47eef669dc31ecb",
         "name": "clock",
-        "func": "const timestamp = Math.ceil(msg.payload / 1000);\n\nmsg.payload = timestamp % 30 ? 1 : 2;\n\nreturn msg;",
+        "func": "const timestamp = Math.ceil(msg.payload / 1000);\n\nmsg.payload = timestamp % 10 ? 1 : 2;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1358,6 +1438,36 @@
         "wires": [
             [
                 "669ff842e6a4701c"
+            ]
+        ]
+    },
+    {
+        "id": "9dd62604b854d1de",
+        "type": "inject",
+        "z": "e47eef669dc31ecb",
+        "d": true,
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 660,
+        "wires": [
+            [
+                "adededb588aa25f6"
             ]
         ]
     }
